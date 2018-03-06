@@ -8,26 +8,48 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import android.provider.Settings.Secure;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
 
 /**
  * Activity to display map using google maps api
- * Reference: https://developers.google.com/maps/documentation/android-api/map-with-marker
+ * References:
+ * https://developers.google.com/maps/documentation/android-api/map-with-marker
+ * https://developer.android.com/training/volley/request.html
  */
 
 public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallback {
 
 //    private BottomNavigationView mBottomNav;
+    private static final String NEW_DEVICE_URL = "http://my-json-feed";
+    private static final String DEVICE_TOKEN_KEY = "DeviceToken";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(!SharedPrefManager.getInstance(this).isDeviceRegistered()){
+            //register the new device
+            registerNewDevice();
+        }
+
+
         //App bar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -101,6 +123,41 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
     }
 
 
+    void registerNewDevice(){
+        JSONObject registerDeviceJSON = new JSONObject();
+        String android_id = Secure.getString(this.getContentResolver(),
+                Secure.ANDROID_ID);
+        if(android_id == NULL){
+            //do something
+            Toast.makeText(getApplicationContext(), "Android ID is null", Toast.LENGTH_SHORT).show();
+        }
 
+        try{
+            registerDeviceJSON.put(DEVICE_TOKEN_KEY, android_id);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+//                (Request.Method.POST, NEW_DEVICE_URL, registerDeviceJSON, new Response.Listener<JSONObject>() {
+                (Request.Method.POST, "https://requestb.in/159m9pg1", registerDeviceJSON, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Toast.makeText(getApplicationContext(),"Response: " + response.toString(), Toast.LENGTH_LONG).show();
+                        User myUser = new User(response, getApplicationContext());
+                        SharedPrefManager.getInstance(getApplicationContext()).userLogin(myUser);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+
+        // Add to the RequestQueue .
+        VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
+    }
 }
 
