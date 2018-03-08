@@ -56,8 +56,16 @@ public class SharedPrefManager {
         return sharedPreferences.getString(ID_KEY, null) != null;
     }
 
-//    //Register a new device
-//    public void registerDevice() {
-//
-//    }
+    //Register a new device
+    public void registerDevice(String token) {
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(DEVICE_TOKEN_KEY, token);
+    }
+
+    //Get user id
+    public String getUserId(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(ID_KEY, null);
+    }
 }

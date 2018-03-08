@@ -35,4 +35,8 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.8.0'
     //Volley
     compile 'com.android.volley:volley:1.1.0'
+    //Notifications
+    compile 'com.google.firebase:firebase-core:9.8.0'
+
 }
+apply plugin: 'com.google.gms.google-services'

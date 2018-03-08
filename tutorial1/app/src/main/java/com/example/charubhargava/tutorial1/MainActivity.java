@@ -18,13 +18,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import android.provider.Settings.Secure;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
+
 
 /**
  * Activity to display map using google maps api
@@ -36,19 +38,12 @@ import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.N
 public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallback {
 
 //    private BottomNavigationView mBottomNav;
-    private static final String NEW_DEVICE_URL = "http://my-json-feed";
-    private static final String DEVICE_TOKEN_KEY = "DeviceToken";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if(!SharedPrefManager.getInstance(this).isDeviceRegistered()){
-            //register the new device
-            registerNewDevice();
-        }
-
 
         //App bar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -120,44 +115,6 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         googleMap.addMarker(new MarkerOptions().position(vancouver).title("Marker in vancouver"));
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-    }
-
-
-    void registerNewDevice(){
-        JSONObject registerDeviceJSON = new JSONObject();
-        String android_id = Secure.getString(this.getContentResolver(),
-                Secure.ANDROID_ID);
-        if(android_id == NULL){
-            //do something
-            Toast.makeText(getApplicationContext(), "Android ID is null", Toast.LENGTH_SHORT).show();
-        }
-
-        try{
-            registerDeviceJSON.put(DEVICE_TOKEN_KEY, android_id);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-//                (Request.Method.POST, NEW_DEVICE_URL, registerDeviceJSON, new Response.Listener<JSONObject>() {
-                (Request.Method.POST, "https://requestb.in/159m9pg1", registerDeviceJSON, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Toast.makeText(getApplicationContext(),"Response: " + response.toString(), Toast.LENGTH_LONG).show();
-                        User myUser = new User(response, getApplicationContext());
-                        SharedPrefManager.getInstance(getApplicationContext()).userLogin(myUser);
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
-
-        // Add to the RequestQueue .
-        VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
 }
 
