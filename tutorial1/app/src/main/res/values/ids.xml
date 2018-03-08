@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="txtDisplay" type="id" />
+    <item name="linearLayoutGroup" type="id" />
+</resources>
