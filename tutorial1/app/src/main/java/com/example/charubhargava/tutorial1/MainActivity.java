@@ -26,6 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import android.provider.Settings.Secure;
 import android.view.View;
 import android.widget.Button;
@@ -41,13 +43,13 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
+
 
 /**
  * Activity to display map using google maps api
@@ -59,7 +61,6 @@ import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.N
 public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    //    private BottomNavigationView mBottomNav;
     private static final String NEW_DEVICE_URL = "http://my-json-feed";
     private static final String DEVICE_TOKEN_KEY = "DeviceToken";
     private static final String STREAM_STATUS_KEY = "isPlaying";
@@ -76,18 +77,12 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         setContentView(R.layout.activity_main);
 
         setToolBar();
-        registerNewDevice();
+       // registerNewDevice();
         try {
             getAllStations();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-//        if (!SharedPrefManager.getInstance(this).isDeviceRegistered()) {
-//            //register the new device
-//            registerNewDevice();
-//       }
 
         //Map
         // Get the SupportMapFragment and request notification
@@ -180,61 +175,12 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
     }
 
-
-    void registerNewDevice(){
-        JSONObject registerDeviceJSON = new JSONObject();
-        String url = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/users";
-
-        String android_id = Secure.getString(this.getContentResolver(),
-                Secure.ANDROID_ID);
-        if(android_id == NULL){
-            //do something
-            Toast.makeText(getApplicationContext(), "Android ID is null", Toast.LENGTH_SHORT).show();
-        }
-
-        try{
-            registerDeviceJSON.put(DEVICE_TOKEN_KEY, android_id);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest
-//                (Request.Method.POST, NEW_DEVICE_URL, registerDeviceJSON, new Response.Listener<JSONObject>() {
-                (Request.Method.POST, url, registerDeviceJSON, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Toast.makeText(getApplicationContext(),"Response: " + response.toString(), Toast.LENGTH_LONG).show();
-                        User myUser = null;
-                        try {
-                            myUser = new User(response.getJSONObject("user"), getApplicationContext());
-                            ((TextView) findViewById(R.id.txtDisplay)).setText("userID: " + myUser.getUserId() + "\n" + response.getJSONObject("user").toString());
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        userId = myUser.getUserId();
-
-                        SharedPrefManager.getInstance(getApplicationContext()).userLogin(myUser);
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
-
-        // Add to the RequestQueue
-        VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
-    }
-
     void getAllStations() throws JSONException {
         //   final TextView mTxtDisplay;
         //   ImageView mImageView;
 
-        //String url = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stations";
-        String url = "https://api.myjson.com/bins/ozhup";
+        String url = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stations";
+//        String url = "https://api.myjson.com/bins/ozhup";
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -306,16 +252,17 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 //
 //        // Access the RequestQueue through your singleton class.
 //        VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
-
+//        Toast.makeText(getApplicationContext(),"Plotting Stations around the world", Toast.LENGTH_LONG).show();
         for (Set<Station> i : myStnDB.getLocationMap().values()) {
             int dx = 0;
             for(Station s : i) {
                 LatLng stn = new LatLng(s.getCountryLat(), s.getCountryLong()+dx);
                 googleMap.addMarker(new MarkerOptions().position(stn).title(String.valueOf(s.getDirbleId())).snippet(s.getGenre() + " " + s.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_wifi_white_24dp)));
-
+//                Toast.makeText(getApplicationContext(),"Plotted " , Toast.LENGTH_LONG).show();
                 dx ++;
             }
         }
+
     }
 
     @Override

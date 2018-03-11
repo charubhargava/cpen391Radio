@@ -24,14 +24,18 @@ public class User {
     private String recordings[];
     private long createdAt;
 
-    public User(JSONObject jsonObject, Context context) throws JSONException {
+    public User(JSONObject jsonObject, Context context)  {
         //create new user object
-        this.id = jsonObject.getString("Id");
-        this.deviceToken = jsonObject.getString("DeviceToken");
-        this.isPlaying = jsonObject.getBoolean("IsPlaying");
-        this.currentPlaying = jsonObject.getString("CurrentPlaying");
-        //this.recordings[] = jsonObject.getString("Recordings");
-        this.createdAt = jsonObject.getLong("CreatedAt");
+        try {
+            this.id = jsonObject.getString("Id");
+            this.deviceToken = jsonObject.getString("DeviceToken");
+            this.isPlaying = jsonObject.getBoolean("IsPlaying");
+            this.currentPlaying = jsonObject.getString("CurrentPlaying");
+            //this.recordings[] = jsonObject.getString("Recordings");
+            this.createdAt = jsonObject.getLong("CreatedAt");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isPlaying() {
