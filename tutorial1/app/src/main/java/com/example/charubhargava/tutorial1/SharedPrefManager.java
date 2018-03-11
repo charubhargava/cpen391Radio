@@ -56,6 +56,11 @@ public class SharedPrefManager {
         return sharedPreferences.getString(ID_KEY, null) != null;
     }
 
+    public String getDeviceToken(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(ID_KEY, null);
+    }
+
 //    //Register a new device
 //    public void registerDevice() {
 //
