@@ -15,8 +15,11 @@ public class Song {
     }
 
     public Song(JSONObject jsonObj) throws JSONException {
-
-        this.artist = jsonObj.getString("artist");
+        try {
+            this.artist = jsonObj.getString("artist");
+        }catch (JSONException e){
+         this.artist = " ";
+        }
         this.title = jsonObj.getString("title");
         this.year = jsonObj.getInt("year");
 

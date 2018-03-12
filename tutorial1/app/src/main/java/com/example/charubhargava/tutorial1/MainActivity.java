@@ -1,16 +1,9 @@
 package com.example.charubhargava.tutorial1;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -26,28 +19,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import android.provider.Settings.Secure;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 
 /**
@@ -60,15 +40,11 @@ import java.util.stream.Stream;
 public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String NEW_DEVICE_URL = "http://my-json-feed";
-    private static final String DEVICE_TOKEN_KEY = "DeviceToken";
     private static final String STREAM_STATUS_KEY = "isPlaying";
-    private static final String STREAM_ID_KEY = "currentStream";
-
+    private static final String STATION_ID_KEY = "currentStream";
+    private static final String USER_AGENT = "android";
 
     public static StationDB myStnDB = new StationDB();
-    public StreamStatus myStreamStatus = new StreamStatus();
-    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +52,8 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         setContentView(R.layout.activity_main);
 
         setToolBar();
-        setupSlidingPanel();
        // registerNewDevice();
+        //TODO is there a reason we dont call this in OnMapReady?
         try {
             getAllStations();
         } catch (JSONException e) {
@@ -92,51 +68,12 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         mapFragment.getMapAsync(this);
     }
 
-    void setupSlidingPanel(){
-        SlidingUpPanelLayout slidingPanel = findViewById(R.id.sliding_layout);
-        slidingPanel.setAnchorPoint(0.75f);
-    }
     void setToolBar(){
         //App bar
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-
-        //Nav bar
-//        BottomNavigationView mBottomNav = (BottomNavigationView) findViewById(R.id.navigation);
-//        BottomNavigationViewHelper.disableShiftMode(mBottomNav);
-//
-//        Menu menu = mBottomNav.getMenu();
-//        MenuItem menuItem = menu.getItem(0);
-//        menuItem.setChecked(true);
-//
-//        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                //do things
-//                switch (item.getItemId()) {
-//                    case R.id.menu_home:
-//                        //main map activity
-//                        break;
-//
-//                    case R.id.menu_player:
-//                        Intent playerIntent = new Intent(MainActivity.this, PlayerActivity.class);
-//                        startActivity(playerIntent);
-//                        break;
-//
-//                    case R.id.menu_recordings:
-////                        Intent recordingsIntent = new Intent(MainActivity.this,  recordings.class);
-////                        startActivity(recordingsIntent);
-//                        break;
-//
-//                    case R.id.menu_settings:
-////                        Intent settingsIntent = new Intent(MainActivity.this, settings.class);
-////                        startActivity(settingsIntent);
-//                        break;
-//                }
-//                return true;
-//            }
-//        });
     }
+
     /**
      * Manipulates the map when it's available.
      * The API invokes this callback when the map is ready to be used.
@@ -176,11 +113,8 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
     }
 
     void getAllStations() throws JSONException {
-        //   final TextView mTxtDisplay;
-        //   ImageView mImageView;
 
-        String url = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stations";
-//        String url = "https://api.myjson.com/bins/ozhup";
+        String url = SharedPrefManager.getInstance(this).stationsURL;
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -190,9 +124,6 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
                         try {
                             ((TextView) findViewById(R.id.txtDisplay)).setText("LOADING RADIO STATIONS");
                              myStnDB = new StationDB(response.getJSONArray("stations"));
-
-                            Toast.makeText(getApplicationContext(),"Loading Stations around the world", Toast.LENGTH_LONG).show();
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -203,11 +134,11 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
-
+                        error.printStackTrace();
                     }
                 });
 
-        // Access the RequestQueue through your singleton class.
+        // Add to request queue
         VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
 
     }
@@ -267,32 +198,27 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(this, "Radio Station selected by" + userId,
+        SharedPrefManager sharedpref = SharedPrefManager.getInstance(this);
+        String userID = sharedpref.getUserId();
+
+        Toast.makeText(this, "Radio Station selected by" + userID,
                 Toast.LENGTH_SHORT).show();
 
         Log.d(TAG, "Selected Station ID = " + marker.getTitle());
-        Log.d(TAG, "UserID = " + userId);
+        Log.d(TAG, "UserID = " + userID);
 
-        ((TextView) findViewById(R.id.txtDisplay)).setText("ID: " + marker.getTitle()+ "\nGenre: " + marker.getSnippet());
-
+//        ((TextView) findViewById(R.id.txtDisplay)).setText("ID: " + marker.getTitle()+ "\nGenre: " + marker.getSnippet());
         updateStreamStatus(marker.getTitle());
-
-        displayStreamInfo();
 
         }
 
     void updateStreamStatus(String stationId){
-        String postUrl = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stream";
-//        String postUrl = "https://webhook.site/ef5b3a6b-5f05-4ae9-894d-7b4aff63a5da";
-        String getUrl = "https://api.myjson.com/bins/1enja9";
+        final SharedPrefManager sharedPref = SharedPrefManager.getInstance(this);
+        String url = sharedPref.streamURL;
+        final String userID = sharedPref.getUserId();
 
-//        if (SharedPrefManager.getInstance(this).isDeviceRegistered()) {
-//            //register the new device
-//            deviceToken = SharedPrefManager.getInstance(this).getDeviceToken();
-//        }
-
-        String streamId = stationId;
-        if(streamId == null){
+//        String streamId = stationId;
+        if(stationId == null){
             //do something
             Toast.makeText(getApplicationContext(), "Station not available", Toast.LENGTH_SHORT).show();
         }
@@ -300,23 +226,31 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
             JSONObject streamStatusJSON = new JSONObject();
             try {
                 streamStatusJSON.put(STREAM_STATUS_KEY, true);
-                streamStatusJSON.put(STREAM_ID_KEY, streamId);
+                streamStatusJSON.put(STATION_ID_KEY, stationId);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
             //POST
             JsonObjectRequest jsObjRequest = new JsonObjectRequest
-//                (Request.Method.POST, NEW_DEVICE_URL, registerDeviceJSON, new Response.Listener<JSONObject>() {
-                    (Request.Method.POST, postUrl, streamStatusJSON, new Response.Listener<JSONObject>() {
+                    (Request.Method.POST, url, streamStatusJSON, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             Toast.makeText(getApplicationContext(), "Response: " + response.toString(), Toast.LENGTH_LONG).show();
-                           // try {
-                                //myStreamStatus = new StreamStatus(response);
-                            //} catch (JSONException e) {
-                            //    e.printStackTrace();
-                            //}
+                            try {
+                                StreamStatus myStreamStatus = new StreamStatus(response);
+                                Toast.makeText(getApplicationContext(),"DONEEEE  ", Toast.LENGTH_LONG).show();
+
+                                sharedPref.updateCurrStreamStatus(myStreamStatus);
+
+                                Toast.makeText(getApplicationContext(),"DONEEEE UPDATING SHARED PREF ", Toast.LENGTH_LONG).show();
+
+
+                                displayStreamInfo();
+                            } catch (JSONException e){
+                                Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+                            }
                         }
                     }, new Response.ErrorListener() {
 
@@ -324,69 +258,43 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
                         public void onErrorResponse(VolleyError error) {
                             // TODO Auto-generated method stub
                             Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
-                            Log.d(TAG, "onErrorResponse: " + userId);
+                            Log.d(TAG, "onErrorResponse: " + userID);
                         }
                     }) {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("User-Agent", "android");
-                    params.put("userId", userId);
+                    params.put("User-Agent", USER_AGENT);
+                    params.put("userId", userID);
                     return params;
                 }
             };
             Log.d(TAG, "Stream Request: " + jsObjRequest.getBody().toString());
 
-            //VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
-
-            //GET
-            JsonObjectRequest jsObjRequest2 = new JsonObjectRequest
-//                (Request.Method.POST, NEW_DEVICE_URL, registerDeviceJSON, new Response.Listener<JSONObject>() {
-                    (Request.Method.GET, getUrl,null,new Response.Listener<JSONObject>() {
-
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        Log.d(TAG, "Stream Response: " + response.toString());
-                        myStreamStatus = new StreamStatus(response);
-                       // Log.d(TAG, "updateStreamStatus: isPlaying = " + myStreamStatus.getPlaying().toString());
-
-                        Toast.makeText(getApplicationContext(),"Stream Status: " + response.toString(), Toast.LENGTH_LONG).show();
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d(TAG, "onErrorResponse: " + error.getMessage());
-                    // TODO Auto-generated method stub
-
-                }
-            });
-
-            // Add to the RequestQueue
-            VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest2);
+            VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
         }
     }
 
     void displayStreamInfo(){
-        if(myStreamStatus != null && myStreamStatus.getPlaying()) {
-            Log.d(TAG, "mystreamstatus" + myStreamStatus.toString());
-            String stationName = myStreamStatus.getCurrentStation().getName();
-            String songTitle = myStreamStatus.getCurrentSong().getTitle();
-            String songArtist = myStreamStatus.getCurrentSong().getArtist();
-            String songYear = String.valueOf(myStreamStatus.getCurrentSong().getYear());
-            Log.d(TAG, "Station: " + stationName);
-            Log.d(TAG, "Song Title: " + songTitle);
-            Log.d(TAG, "Artist: " + songArtist);
-            Log.d(TAG, "Year: " + songYear);
+        SharedPrefManager sharedPref = SharedPrefManager.getInstance(this);
 
-            ((TextView) findViewById(R.id.txtDisplay)).setText("Currently Playing...\nStation: " + stationName + "\nSong: " + songTitle + "\nArtist: " + songArtist + "\nYear: " + songYear);
-        }
+        String stationName = sharedPref.getCurrStn();
+        String songTitle = sharedPref.getCurrSong();
+        String songArtist = sharedPref.getCurrArtist();
+
+        Log.d(TAG, "Station: " + stationName);
+        Log.d(TAG, "Song Title: " + songTitle);
+        Log.d(TAG, "Artist: " + songArtist);
+
+//        TextView stnDisplay = findViewById(R.id.stnDisplay);
+        TextView songDisplay = findViewById(R.id.songDisplay);
+//        TextView artistDisplay = findViewById(R.id.artistDisplay);
+//        Toast.makeText(getApplicationContext(), "Station: " + stationName, Toast.LENGTH_LONG).show();
+
+//        stnDisplay.setText(songTitle);
+        songDisplay.setText(songTitle);
+//        artistDisplay.setText(songArtist);
+
     }
 
 }

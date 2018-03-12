@@ -35,7 +35,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         sendRegistrationToServer(refreshedToken);
 
         //Save registration token for later use
-        SharedPrefManager.getInstance(this).registerDevice(refreshedToken);
+        //SharedPrefManager.getInstance(this).registerDevice(refreshedToken);
     }
 
     /*
