@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import android.provider.Settings.Secure;
 import android.view.View;
@@ -47,8 +48,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
-
-import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
 
 
 /**
@@ -77,6 +76,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         setContentView(R.layout.activity_main);
 
         setToolBar();
+        setupSlidingPanel();
        // registerNewDevice();
         try {
             getAllStations();
@@ -92,45 +92,50 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         mapFragment.getMapAsync(this);
     }
 
+    void setupSlidingPanel(){
+        SlidingUpPanelLayout slidingPanel = findViewById(R.id.sliding_layout);
+        slidingPanel.setAnchorPoint(0.75f);
+    }
     void setToolBar(){
         //App bar
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+
         //Nav bar
-        BottomNavigationView mBottomNav = (BottomNavigationView) findViewById(R.id.navigation);
-        BottomNavigationViewHelper.disableShiftMode(mBottomNav);
-
-        Menu menu = mBottomNav.getMenu();
-        MenuItem menuItem = menu.getItem(0);
-        menuItem.setChecked(true);
-
-        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                //do things
-                switch (item.getItemId()) {
-                    case R.id.menu_home:
-                        //main map activity
-                        break;
-
-                    case R.id.menu_player:
-                        Intent playerIntent = new Intent(MainActivity.this, PlayerActivity.class);
-                        startActivity(playerIntent);
-                        break;
-
-                    case R.id.menu_recordings:
-//                        Intent recordingsIntent = new Intent(MainActivity.this,  recordings.class);
-//                        startActivity(recordingsIntent);
-                        break;
-
-                    case R.id.menu_settings:
-//                        Intent settingsIntent = new Intent(MainActivity.this, settings.class);
-//                        startActivity(settingsIntent);
-                        break;
-                }
-                return true;
-            }
-        });
+//        BottomNavigationView mBottomNav = (BottomNavigationView) findViewById(R.id.navigation);
+//        BottomNavigationViewHelper.disableShiftMode(mBottomNav);
+//
+//        Menu menu = mBottomNav.getMenu();
+//        MenuItem menuItem = menu.getItem(0);
+//        menuItem.setChecked(true);
+//
+//        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                //do things
+//                switch (item.getItemId()) {
+//                    case R.id.menu_home:
+//                        //main map activity
+//                        break;
+//
+//                    case R.id.menu_player:
+//                        Intent playerIntent = new Intent(MainActivity.this, PlayerActivity.class);
+//                        startActivity(playerIntent);
+//                        break;
+//
+//                    case R.id.menu_recordings:
+////                        Intent recordingsIntent = new Intent(MainActivity.this,  recordings.class);
+////                        startActivity(recordingsIntent);
+//                        break;
+//
+//                    case R.id.menu_settings:
+////                        Intent settingsIntent = new Intent(MainActivity.this, settings.class);
+////                        startActivity(settingsIntent);
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
     }
     /**
      * Manipulates the map when it's available.
@@ -150,7 +155,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
             // in a raw resource file.
             boolean success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.style_json));
+                            this, R.raw.style_json_dark));
             if (!success) {
                 Log.e(TAG, "Style parsing failed.");
             }
@@ -159,11 +164,6 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         }
 
         plotAllStations(googleMap);
-
-        // Add a marker in Sydney, Australia,
-        // and move the map's camera to the same location.
-//        LatLng sydney = new LatLng(-33.852, 151.211);
-//        googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 
         LatLng vancouver = new LatLng(49.282, -123.121);
         googleMap.addMarker(new MarkerOptions().position(vancouver).title("Marker in vancouver"));
@@ -282,8 +282,8 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         }
 
     void updateStreamStatus(String stationId){
-        //String url = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stream";
-        String postUrl = "https://webhook.site/ef5b3a6b-5f05-4ae9-894d-7b4aff63a5da";
+        String postUrl = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stream";
+//        String postUrl = "https://webhook.site/ef5b3a6b-5f05-4ae9-894d-7b4aff63a5da";
         String getUrl = "https://api.myjson.com/bins/1enja9";
 
 //        if (SharedPrefManager.getInstance(this).isDeviceRegistered()) {
@@ -292,7 +292,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 //        }
 
         String streamId = stationId;
-        if(streamId == NULL){
+        if(streamId == null){
             //do something
             Toast.makeText(getApplicationContext(), "Station not available", Toast.LENGTH_SHORT).show();
         }

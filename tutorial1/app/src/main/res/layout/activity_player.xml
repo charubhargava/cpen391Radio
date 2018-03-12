@@ -1,68 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:design="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.charubhargava.tutorial1.PlayerActivity">
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="68dp"
+    sothree:umanoShadowHeight="4dp">
 
-
-    <RelativeLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Main Content"
+        android:textSize="16sp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/topBar">
-
-            //App bar
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/my_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorActionBar"
-                app:titleTextColor="@color/colorActionBarText"
-                android:elevation="4dp"
-                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:layout_below="@+id/topBar"
-            android:layout_above="@+id/bottomBar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Player Activity"/>
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/bottomBar"
-            android:layout_alignParentBottom="true">
-
-            //Nav Bar
-            <android.support.design.widget.BottomNavigationView
-                android:id="@+id/navigation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorActionBar"
-                design:menu="@menu/bottom_nav_items" />
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-</android.support.design.widget.CoordinatorLayout>
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|top"
+        android:text="The Awesome Sliding Up Panel"
+        android:textSize="16sp" />
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
