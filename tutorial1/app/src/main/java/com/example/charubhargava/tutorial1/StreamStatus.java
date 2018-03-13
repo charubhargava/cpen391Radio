@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v7.content.res.AppCompatResources;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,9 +117,20 @@ public class StreamStatus {
                         TextView stnDisplay = (TextView)((Activity)mCtx).findViewById(R.id.stnDisplay);
                         stnDisplay.setText(currentStation.getName() + "\n" + currentSong.getTitle() + " - " + currentSong.getArtist());
 //                        Toast.makeText(mCtx, "updated" , Toast.LENGTH_LONG).show();
+                        ImageButton playPauseBtn = ((Activity)mCtx).findViewById(R.id.playPause);
+                        boolean isPlaying = sharedPref.getIsPlaying();  //todo this is ghetto
+                        if(isPlaying){
+                            //image pause
+                            playPauseBtn.setImageResource(R.drawable.ic_pause_white_24dp);
+                        }
+                        else{
+                            //image play
+                            playPauseBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+                        }
 
                     } catch (JSONException e){
-                        Toast.makeText(mCtx, "Error in update stream status: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mCtx, "Error in update stream status: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -125,7 +138,8 @@ public class StreamStatus {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     // TODO Auto-generated method stub
-                    Toast.makeText(mCtx, "Error from server: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mCtx, "Error from server: " + error.getMessage(), Toast.LENGTH_LONG).show();
                     Log.d(TAG, "onErrorResponse: " + userID);
                 }
             }) {
@@ -159,6 +173,15 @@ public class StreamStatus {
                             sharedPref.updateCurrStreamStatus(getInstance(mCtx));
                             TextView stnDisplay = ((Activity)mCtx).findViewById(R.id.stnDisplay);
                             stnDisplay.setText(currentStation.getName() + "\n" + currentSong.getTitle() + " - " + currentSong.getArtist());
+                            ImageButton playPauseBtn = ((Activity)mCtx).findViewById(R.id.playPause);
+                            if(isPlaying){
+                                //image pause
+                                playPauseBtn.setImageResource(R.drawable.ic_pause_white_24dp);
+                            }
+                            else{
+                                //image play
+                                playPauseBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+                            }
                         } catch (JSONException e){
                             Toast.makeText(mCtx, "Error in update stream status (get): " + e.getMessage(), Toast.LENGTH_LONG).show();
 
@@ -183,6 +206,8 @@ public class StreamStatus {
         };
         VolleySingleton.getInstance(mCtx).addToRequestQueue(jsObjRequest);
     }
+
+
 
 
 }

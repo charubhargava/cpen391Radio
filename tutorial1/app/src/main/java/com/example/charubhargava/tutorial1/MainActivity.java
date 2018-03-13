@@ -40,10 +40,6 @@ import java.util.Set;
 public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-//    private static final String STREAM_STATUS_KEY = "isPlaying";
-//    private static final String STATION_ID_KEY = "currentStream";
-//    private static final String USER_AGENT = "android";
-//    private StreamStatus streamStatus = new StreamStatus();
     public static StationDB myStnDB = new StationDB();
 
     @Override
@@ -53,16 +49,11 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
         //TODO this is ghetto init
         final SharedPrefManager sharedPref = SharedPrefManager.getInstance(MainActivity.this);
-//        final StreamStatus streamStatus = StreamStatus.getInstance(MainActivity.this);
-
         setToolBar();
 
         //TODO is there a reason we dont call this in OnMapReady?
-//        try {
-//            getAllStations();
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+
+        getAllStations();
 
         //Map
         // Get the SupportMapFragment and request notification
@@ -75,7 +66,16 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         final ImageButton playPauseBtn = findViewById(R.id.playPause);
         playPauseBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                StreamStatus.getInstance(MainActivity.this).updateStreamStatus(sharedPref.getCurrStreamID(), !sharedPref.getIsPlaying());
+                boolean isPlaying = !sharedPref.getIsPlaying();
+                StreamStatus.getInstance(MainActivity.this).updateStreamStatus(sharedPref.getCurrStreamID(), isPlaying );
+                if(isPlaying){
+                    //image pause
+                    playPauseBtn.setImageResource(R.drawable.ic_pause_white_24dp);
+                }
+                else{
+                    //image play
+                    playPauseBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+                }
             }
         });
 
@@ -114,23 +114,22 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
             Log.e(TAG, "Can't find style. Error: ", e);
         }
 
-        try {
-            getAllStations();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            getAllStations();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
         plotAllStations(googleMap);
 
         LatLng vancouver = new LatLng(49.282, -123.121);
-//        googleMap.addMarker(new MarkerOptions().position(vancouver).title("Marker in vancouver"));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(vancouver));
         googleMap.setOnInfoWindowClickListener(this);
 
 
     }
 
-    void getAllStations() throws JSONException {
+    void  getAllStations() {
 
         String url = SharedPrefManager.getInstance(this).stationsURL;
 
