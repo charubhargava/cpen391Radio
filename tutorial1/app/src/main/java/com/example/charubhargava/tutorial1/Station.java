@@ -5,7 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Station {
-    private String id;
+    public String id; //TODO private
     private String name;
     private int dirbleId;
     private JSONObject country;

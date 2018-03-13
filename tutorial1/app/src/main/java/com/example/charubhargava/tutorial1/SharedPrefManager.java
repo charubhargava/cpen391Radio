@@ -22,18 +22,15 @@ public class SharedPrefManager {
     private static final String DEVICE_TOKEN_KEY = "DeviceToken";
     private static final String IS_PLAYING_KEY = "IsPLaying";
     private static final String CURRENT_PLAYING_KEY = "CurrentPlaying";
-    private static final String RECORDINGS_KEY = "Recordings";
     private static final String CREATED_AT_KEY = "CreatedAt";
     private static final String CURR_STREAM_URL_KEY = "currentStreamUrl";
     private static final String CURR_SONG_KEY = "currentSong";
-    private static final String CURR_STATION_KEY = "currentStation";
-    private static final String STATION_ID_KEY = "id";
+    private static final String STREAM_ID_KEY = "dirbleId";
     private static final String STATION_NAME_KEY = "name";
     private static final String COUNTRY_KEY = "country";
     private static final String COUNTRY_NAME_KEY = "name";
     private static final String GENRE_KEY = "genre";
-    private static final String ARTIST_KEY = "artist";
-    private static final String TITLE_KEY = "title";
+    private static final String ARTIST_KEY = "name";
 
 
 
@@ -64,7 +61,6 @@ public class SharedPrefManager {
         editor.putString(DEVICE_TOKEN_KEY, user.getDeviceToken());
         editor.putBoolean(IS_PLAYING_KEY, user.isPlaying());
         editor.putString(CURRENT_PLAYING_KEY, user.getCurrentPlaying());
-        //editor.putStringSet(RECORDINGS_KEY, user.getRecordings()); TODO store array??
         editor.putLong(CREATED_AT_KEY, user.getCreatedAt());
 
         editor.apply();
@@ -84,7 +80,7 @@ public class SharedPrefManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         Station stn = stream.getCurrentStation();
-        editor.putString(CURR_STATION_KEY, stn.getId());
+        editor.putString(STREAM_ID_KEY, String.valueOf(stn.getDirbleId()));
         editor.putString(STATION_NAME_KEY, stn.getName());
         editor.putString(COUNTRY_KEY, stn.getCountryName());
         editor.putString(GENRE_KEY, stn.getGenre());
@@ -102,7 +98,7 @@ public class SharedPrefManager {
     //Get current station
     public String getCurrStn(){
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(CURR_STATION_KEY, null);
+        return sharedPreferences.getString(STATION_NAME_KEY, null);
     }
 
     //Get current song
@@ -116,6 +112,18 @@ public class SharedPrefManager {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(ARTIST_KEY, null);
     }
+
+    //Get current stn id
+    public String getCurrStreamID(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(STREAM_ID_KEY, null);
+    }
+    //Is song playing
+    public boolean getIsPlaying(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(IS_PLAYING_KEY, false);
+    }
+
 
 
 
