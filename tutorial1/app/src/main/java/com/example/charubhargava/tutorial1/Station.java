@@ -1,13 +1,15 @@
 package com.example.charubhargava.tutorial1;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Station {
-    public String id; //TODO private
+    private static final String TAG = "Station class";
+    private String id;
     private String name;
-    private int dirbleId;
     private JSONObject country;
     private String countryCode;
     private String countryName;
@@ -23,20 +25,24 @@ public class Station {
 
     }
 
-    public Station(JSONObject jsonObj) throws JSONException {
-        this.id = jsonObj.getString("id");
-        this.name = jsonObj.getString("name");
-        this.dirbleId = jsonObj.getInt("dirbleId");
-        this.country = jsonObj.getJSONObject("country");
-        this.countryCode = country.getString("code");
-        this.countryName = country.getString("name");
-        this.countryLat = country.getDouble("latitude");
-        this.countryLong = country.getDouble("longitude");
-        this.streamUrl = jsonObj.getString("streamUrl");
-        this.genre = jsonObj.getString("genre");
-        this.createdAt = jsonObj.getLong("createdAt");
-        this.updatedAt = jsonObj.getLong("updatedAt");
+    public Station(JSONObject jsonObj) {
+        try {
+            this.id = jsonObj.getString("id");
+            this.name = jsonObj.getString("name");
+            this.country = jsonObj.getJSONObject("country");
+            this.countryCode = country.getString("code");
+            this.countryName = country.getString("name");
+            this.countryLat = country.getDouble("latitude");
+            this.countryLong = country.getDouble("longitude");
+            this.streamUrl = jsonObj.getString("streamUrl");
+            this.genre = jsonObj.getString("genre");
+            this.createdAt = jsonObj.getLong("createdAt");
+            this.updatedAt = jsonObj.getLong("updatedAt");
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
+
 
     public String getId() {
         return id;
@@ -44,9 +50,6 @@ public class Station {
 
     public String getName() {
         return name;
-    }
-
-    public int getDirbleId() { return dirbleId;
     }
 
     public JSONObject getCountry() {

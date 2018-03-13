@@ -12,9 +12,9 @@ import android.widget.Toast;
 
 public class SharedPrefManager {
 
-    public static final String createUserURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/users";
-    public static final String stationsURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stations";
-    public static final String streamURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stream";
+    private static final String createUserURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/users";
+    private static final String stationsURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stations";
+    private static final String streamURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stream";
 
     private static final String SHARED_PREF_NAME = "radioUserSharedPref";
 
@@ -25,7 +25,7 @@ public class SharedPrefManager {
     private static final String CREATED_AT_KEY = "CreatedAt";
     private static final String CURR_STREAM_URL_KEY = "currentStreamUrl";
     private static final String CURR_SONG_KEY = "currentSong";
-    private static final String STREAM_ID_KEY = "dirbleId";
+    private static final String STREAM_ID_KEY = "id";
     private static final String STATION_NAME_KEY = "name";
     private static final String COUNTRY_KEY = "country";
     private static final String COUNTRY_NAME_KEY = "name";
@@ -80,7 +80,7 @@ public class SharedPrefManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         Station stn = stream.getCurrentStation();
-        editor.putString(STREAM_ID_KEY, String.valueOf(stn.getDirbleId()));
+        editor.putString(STREAM_ID_KEY, stn.getId());
         editor.putString(STATION_NAME_KEY, stn.getName());
         editor.putString(COUNTRY_KEY, stn.getCountryName());
         editor.putString(GENRE_KEY, stn.getGenre());
@@ -124,7 +124,15 @@ public class SharedPrefManager {
         return sharedPreferences.getBoolean(IS_PLAYING_KEY, false);
     }
 
+    public static String getStationsURL() {
+        return stationsURL;
+    }
 
+    public static String getStreamURL() {
+        return streamURL;
+    }
 
-
+    public static String getCreateUserURL() {
+        return createUserURL;
+    }
 }

@@ -29,12 +29,7 @@ import java.util.Map;
 import static com.google.android.gms.wearable.DataMap.TAG;
 
 public class StreamStatus {
-    private Boolean isPlaying;
-    private Station currentStation = new Station();
-    private String currentStreamUrl;
-    private Song currentSong = new Song();
-    private static StreamStatus mInstance;
-    private static Context mCtx;
+    private static final String TAG = "StreamStatus";
 
     //POST REQ PARAMETERS
     private static final String STREAM_STATUS_KEY = "isPlaying";
@@ -44,6 +39,14 @@ public class StreamStatus {
     private static final String CURRENT_SONG_KEY = "currentSong";
     private static final String CURRENT_STATION_KEY = "currentStation";
     private static final String CURRENT_STREAM_URL_KEY = "currentStreamUrl";
+
+    private Boolean isPlaying;
+    private Station currentStation = new Station();
+    private String currentStreamUrl;
+    private Song currentSong = new Song();
+    private static StreamStatus mInstance;
+    private static Context mCtx;
+
 
     private StreamStatus(Context context) {
         this.mCtx = context;
@@ -63,10 +66,10 @@ public class StreamStatus {
 
     private void updateStreamStatusFields(JSONObject jsonObj) throws JSONException {
         Log.d(TAG, "jsonobj StreamStatus: " + jsonObj.toString());
-        this.isPlaying = jsonObj.getBoolean("isPlaying");
-        this.currentStation = new Station(jsonObj.getJSONObject("currentStation"));
-        this.currentStreamUrl = jsonObj.getString("currentStreamUrl");
-        this.currentSong = new Song(jsonObj.getJSONObject("currentSong"));
+        this.isPlaying = jsonObj.getBoolean(STREAM_STATUS_KEY);
+        this.currentStation = new Station(jsonObj.getJSONObject(CURRENT_STATION_KEY));
+        this.currentStreamUrl = jsonObj.getString(CURRENT_STREAM_URL_KEY);
+        this.currentSong = new Song(jsonObj.getJSONObject(CURRENT_SONG_KEY));
     }
 
     public Boolean getPlaying() {
@@ -88,7 +91,7 @@ public class StreamStatus {
     public void updateStreamStatus(final String streamId, boolean isPlaying){
         final SharedPrefManager sharedPref = SharedPrefManager.getInstance(mCtx);
         final String userID = sharedPref.getUserId();
-        String url = sharedPref.streamURL;
+        String url = sharedPref.getStreamURL();
 
         if(streamId == null){
             //do something
@@ -109,7 +112,7 @@ public class StreamStatus {
             (Request.Method.POST, url, streamStatusJSON, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-//                    Toast.makeText(mCtx, "Response: " + response.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(mCtx, "Response: " + response.toString(), Toast.LENGTH_LONG).show();
                     try {
 
                         updateStreamStatusFields(response);
@@ -129,8 +132,8 @@ public class StreamStatus {
                         }
 
                     } catch (JSONException e){
-                        Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
-//                        Toast.makeText(mCtx, "Error in update stream status: " + e.getMessage(), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mCtx, "Error in update stream status: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             }, new Response.ErrorListener() {
@@ -138,8 +141,8 @@ public class StreamStatus {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     // TODO Auto-generated method stub
-                    Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
-//                    Toast.makeText(mCtx, "Error from server: " + error.getMessage(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mCtx, "Error from server: " + TAG + error.getMessage(), Toast.LENGTH_LONG).show();
                     Log.d(TAG, "onErrorResponse: " + userID);
                 }
             }) {
@@ -161,13 +164,13 @@ public class StreamStatus {
     public void updateStreamStatus(){
         final SharedPrefManager sharedPref = SharedPrefManager.getInstance(mCtx);
         final String userID = sharedPref.getUserId();
-        String url = sharedPref.streamURL;
+        String url = sharedPref.getStreamURL();
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-//                        Toast.makeText(mCtx, "Response: " + response.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(mCtx, "Response: " + response.toString(), Toast.LENGTH_LONG).show();
                         try {
                             updateStreamStatusFields(response);
                             sharedPref.updateCurrStreamStatus(getInstance(mCtx));
@@ -192,7 +195,7 @@ public class StreamStatus {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
-                        Toast.makeText(mCtx, "Error from server: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(mCtx, "Error from server: " + error.toString() , Toast.LENGTH_LONG).show();
                         Log.d(TAG, "onErrorResponse: " + userID);
                     }
                 }) {

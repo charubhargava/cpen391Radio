@@ -23,10 +23,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Set;
 
 
@@ -53,8 +57,11 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
         //TODO is there a reason we dont call this in OnMapReady?
 
-        getAllStations();
-
+        try {
+            getAllStations();
+        } catch (JSONException e){
+            Toast.makeText(MainActivity.this, "JSON Exception getting stations " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
         //Map
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.
@@ -129,9 +136,11 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
     }
 
-    void  getAllStations() {
-
-        String url = SharedPrefManager.getInstance(this).stationsURL;
+    void  getAllStations() throws JSONException{
+        SharedPrefManager sharedpref = SharedPrefManager.getInstance(this);
+        String userID = sharedpref.getUserId();
+//        Toast.makeText(this, "Getting stations by " + userID, Toast.LENGTH_SHORT).show();
+        String url = sharedpref.getInstance(this).getStationsURL();
 
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -139,10 +148,12 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-//                            ((TextView) findViewById(R.id.txtDisplay)).setText("LOADING RADIO STATIONS");
-                            myStnDB = new StationDB(response.getJSONArray("stations"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            JSONArray stations = response.getJSONArray("stations");
+                            myStnDB = new StationDB(stations);
+                        } catch (JSONException e){
+                            Toast.makeText(MainActivity.this, "JSONException getting stations  " +
+                                    e.getMessage(), Toast.LENGTH_LONG).show();
+
                         }
 
                     }
@@ -150,8 +161,9 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-                        error.printStackTrace();
+                        Toast.makeText(MainActivity.this, "Error getting stations: " +
+                                error.getMessage(), Toast.LENGTH_LONG).show();
+
                     }
                 });
 
@@ -162,13 +174,12 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
     void plotAllStations(GoogleMap googleMap) {
         //Add a marker for each station
-       for (Set<Station> i : myStnDB.getLocationMap().values()) {
-            int dx = 0;
-            for (Station s : i) {
-                LatLng stn = new LatLng(s.getCountryLat(), s.getCountryLong() + dx);
-                googleMap.addMarker(new MarkerOptions().position(stn).title(String.valueOf(s.getDirbleId())).snippet(s.getGenre() + " " + s.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_wifi_white_24dp)));
-                dx++;
-            }
+        HashMap<String, Station> stations = myStnDB.getStations();
+       for (String id : stations.keySet()) {
+           Station s = stations.get(id);
+           LatLng stn = new LatLng(s.getCountryLat(), s.getCountryLong());
+           googleMap.addMarker(new MarkerOptions().position(stn).title(id).snippet(s.getGenre()
+                   + " " + s.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_wifi_white_24dp)));
         }
 
     }
