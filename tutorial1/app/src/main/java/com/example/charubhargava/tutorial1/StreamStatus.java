@@ -103,7 +103,8 @@ public class StreamStatus {
             (Request.Method.POST, url, streamStatusJSON, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Toast.makeText(mCtx, "Response: " + response.toString(), Toast.LENGTH_LONG).show();
+                    if(MainActivity.debug)
+                        Toast.makeText(mCtx, "Response: " + response.toString(), Toast.LENGTH_LONG).show();
                     try {
 
                         updateStreamStatusFields(response);
@@ -153,7 +154,8 @@ public class StreamStatus {
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(mCtx, "Response: " + response.toString(), Toast.LENGTH_LONG).show();
+                        if(MainActivity.debug)
+                            Toast.makeText(mCtx, "Response: " + response.toString(), Toast.LENGTH_LONG).show();
                         try {
                             updateStreamStatusFields(response);
                             sharedPref.updateCurrStreamStatus(getInstance(mCtx));

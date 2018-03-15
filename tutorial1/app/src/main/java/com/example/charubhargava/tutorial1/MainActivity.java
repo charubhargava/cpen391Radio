@@ -1,6 +1,7 @@
 package com.example.charubhargava.tutorial1;
-import android.app.Activity;
 import android.content.res.Resources;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +13,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.anupcowkur.reservoir.Reservoir;
 import com.anupcowkur.reservoir.ReservoirPutCallback;
-import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,42 +39,74 @@ import java.util.HashMap;
  * References:
  * https://developers.google.com/maps/documentation/android-api/map-with-marker
  * https://developer.android.com/training/volley/request.html
+ * https://github.com/mitchtabian/TabFragments
  */
 
 public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String STATIONDB_KEY = "stationDB";
-    public static boolean debug = false;
+    private static final String STATION_DB_KEY = "stationDB";
+    private static final String IMAGE_TAB_TITLE = "Now Playing";
+    private static final String RECORDINGS_TAB_TITLE= "Recordings";
+    private static final int CACHE_SIZE = 16384;
+
+
+    private SectionsPageAdapter mSectionsPageAdapter;
+    private ViewPager mViewPager;
 
     public static StationDB myStnDB = new StationDB();
+    public static boolean debug = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO this is ghetto init
-        final SharedPrefManager sharedPref = SharedPrefManager.getInstance(MainActivity.this);
-        setToolBar();
+        //DO NOT REMOVE THIS
+        SharedPrefManager sharedPref = SharedPrefManager.getInstance(MainActivity.this);
 
-        //Init cache
-        try{
-            Reservoir.init(this, 16384);
-        } catch (IOException e) {
-            if(debug)
-            Toast.makeText(this, "Failure init cache " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "Failure init cache " + e.getMessage());
-        }
+        setupToolBar();
+        setupPlayer();
+        setupCache();
 
-        //Map
-        // Get the SupportMapFragment and request notification
-        // when the map is ready to be used.
+        //Map init
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //TODO do a get to init text display for the song playing currently
-        //Play button
+        //Tabs init
+        mSectionsPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.tabContainer);
+        setupViewPager(mViewPager);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mViewPager);
+
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
+        adapter.addFragment(new ImageFragment(), IMAGE_TAB_TITLE);
+        adapter.addFragment(new RecordingsFragment(), RECORDINGS_TAB_TITLE);
+        viewPager.setAdapter(adapter);
+    }
+
+    void setupCache(){
+        //Init cache
+        try{
+            Reservoir.init(this, CACHE_SIZE);
+        } catch (IOException e) {
+            if(debug)
+                Toast.makeText(this, "Failure init cache " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Failure init cache " + e.getMessage());
+        }
+    }
+
+    void setupPlayer(){
+        //Set up play/pause button on click listener
+        final SharedPrefManager sharedPref = SharedPrefManager.getInstance(MainActivity.this);
         final ImageButton playPauseBtn = findViewById(R.id.playPause);
         playPauseBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -91,10 +123,10 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
             }
         });
 
-
+        //Init stream status and player singletons, update player with the current stream status
+        StreamStatus.getInstance(MainActivity.this).updateStreamStatus();
     }
-
-    void setToolBar() {
+    void setupToolBar  () {
         //App bar
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -140,10 +172,10 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         //Check if stationsDB exists in cache
         boolean stationDBExists = false;
         try {
-            stationDBExists = Reservoir.contains(STATIONDB_KEY);
+            stationDBExists = Reservoir.contains(STATION_DB_KEY);
             if(stationDBExists){
                 try{
-                    myStnDB = Reservoir.get(STATIONDB_KEY, StationDB.class);
+                    myStnDB = Reservoir.get(STATION_DB_KEY, StationDB.class);
                     if(debug)
                         Toast.makeText(this, "Got stations from cache " + myStnDB.size(), Toast.LENGTH_SHORT).show();
                     if(myStnDB.size() > 100) {
@@ -183,7 +215,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
                             myStnDB = new StationDB(stationsJSON);
                             plotAllStations(googleMap);
 
-                            Reservoir.putAsync(STATIONDB_KEY, myStnDB, new ReservoirPutCallback() {
+                            Reservoir.putAsync(STATION_DB_KEY, myStnDB, new ReservoirPutCallback() {
                                 @Override
                                 public void onSuccess() {
                                     if(debug)

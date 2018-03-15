@@ -30,7 +30,6 @@ public class Player {
     public static void updateSongInfo(String text, boolean isPlaying){
         TextView stnDisplay = (TextView)((Activity)mCtx).findViewById(R.id.stnDisplay);
         stnDisplay.setText(text);
-        Toast.makeText(mCtx, "updated" , Toast.LENGTH_LONG).show();
         ImageButton playPauseBtn = ((Activity)mCtx).findViewById(R.id.playPause);
         if(isPlaying){
             //image pause
