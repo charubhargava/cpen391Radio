@@ -2,16 +2,13 @@ package com.example.charubhargava.tutorial1;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.content.res.AppCompatResources;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -19,14 +16,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.google.android.gms.wearable.DataMap.TAG;
 
 public class StreamStatus {
     private static final String TAG = "StreamStatus";
@@ -119,7 +111,7 @@ public class StreamStatus {
                         sharedPref.updateCurrStreamStatus(getInstance(mCtx));
                         TextView stnDisplay = (TextView)((Activity)mCtx).findViewById(R.id.stnDisplay);
                         stnDisplay.setText(currentStation.getName() + "\n" + currentSong.getTitle() + " - " + currentSong.getArtist());
-//                        Toast.makeText(mCtx, "updated" , Toast.LENGTH_LONG).show();
+                        Toast.makeText(mCtx, "updated" , Toast.LENGTH_LONG).show();
                         ImageButton playPauseBtn = ((Activity)mCtx).findViewById(R.id.playPause);
                         boolean isPlaying = sharedPref.getIsPlaying();  //todo this is ghetto
                         if(isPlaying){
@@ -132,8 +124,10 @@ public class StreamStatus {
                         }
 
                     } catch (JSONException e){
-//                        Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(mCtx, "Error in update stream status: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        if(MainActivity.debug)
+                            Toast.makeText(mCtx, "Error in update stream status: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
                     }
                 }
             }, new Response.ErrorListener() {
