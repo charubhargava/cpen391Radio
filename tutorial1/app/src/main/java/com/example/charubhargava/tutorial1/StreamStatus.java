@@ -80,13 +80,12 @@ public class StreamStatus {
         return currentSong;
     }
 
-    public void updateStreamStatus(final String streamId, boolean isPlaying){
+    public void updateStreamStatus(final String streamId, final boolean isPlaying){
         final SharedPrefManager sharedPref = SharedPrefManager.getInstance(mCtx);
         final String userID = sharedPref.getUserId();
         String url = sharedPref.getStreamURL();
 
         if(streamId == null){
-            //do something
             Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -109,20 +108,8 @@ public class StreamStatus {
 
                         updateStreamStatusFields(response);
                         sharedPref.updateCurrStreamStatus(getInstance(mCtx));
-                        TextView stnDisplay = (TextView)((Activity)mCtx).findViewById(R.id.stnDisplay);
-                        stnDisplay.setText(currentStation.getName() + "\n" + currentSong.getTitle() + " - " + currentSong.getArtist());
-                        Toast.makeText(mCtx, "updated" , Toast.LENGTH_LONG).show();
-                        ImageButton playPauseBtn = ((Activity)mCtx).findViewById(R.id.playPause);
-                        boolean isPlaying = sharedPref.getIsPlaying();  //todo this is ghetto
-                        if(isPlaying){
-                            //image pause
-                            playPauseBtn.setImageResource(R.drawable.ic_pause_white_24dp);
-                        }
-                        else{
-                            //image play
-                            playPauseBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
-                        }
-
+                        Player.getInstance(mCtx).updateSongInfo(currentStation.getName() + "\n" +
+                                currentSong.getTitle() + " - " + currentSong.getArtist(),isPlaying);
                     } catch (JSONException e){
                         if(MainActivity.debug)
                             Toast.makeText(mCtx, "Error in update stream status: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -134,10 +121,12 @@ public class StreamStatus {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    // TODO Auto-generated method stub
-//                    Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(mCtx, "Error from server: " + TAG + error.getMessage(), Toast.LENGTH_LONG).show();
+                    if(MainActivity.debug)
+                        Toast.makeText(mCtx, "Error from server: " + TAG + error.getMessage(), Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onErrorResponse: " + userID);
+
                 }
             }) {
             @Override
@@ -168,17 +157,8 @@ public class StreamStatus {
                         try {
                             updateStreamStatusFields(response);
                             sharedPref.updateCurrStreamStatus(getInstance(mCtx));
-                            TextView stnDisplay = ((Activity)mCtx).findViewById(R.id.stnDisplay);
-                            stnDisplay.setText(currentStation.getName() + "\n" + currentSong.getTitle() + " - " + currentSong.getArtist());
-                            ImageButton playPauseBtn = ((Activity)mCtx).findViewById(R.id.playPause);
-                            if(isPlaying){
-                                //image pause
-                                playPauseBtn.setImageResource(R.drawable.ic_pause_white_24dp);
-                            }
-                            else{
-                                //image play
-                                playPauseBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
-                            }
+                            Player.getInstance(mCtx).updateSongInfo(currentStation.getName() + "\n" +
+                                    currentSong.getTitle() + " - " + currentSong.getArtist(),isPlaying);
                         } catch (JSONException e){
                             Toast.makeText(mCtx, "Error in update stream status (get): " + e.getMessage(), Toast.LENGTH_LONG).show();
 

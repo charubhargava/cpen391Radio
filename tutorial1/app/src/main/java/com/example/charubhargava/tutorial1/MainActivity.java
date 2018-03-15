@@ -71,8 +71,6 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         // when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-
-
         mapFragment.getMapAsync(this);
 
         //TODO do a get to init text display for the song playing currently

@@ -57,31 +57,6 @@ public class StationDB {
         return stations;
     }
 
-//    public HashMap<String,Set<Station>> getLocationMap(){
-//        return locationMap;
-//    }
-//
-//    public Set<Station> getSetByCountry(String country){
-//        Set<Station> ans = new HashSet<Station>();
-//        for(Station i : stations){
-//            if(i.getCountryName() == country){
-//                ans.add(i);
-//            }
-//        }
-//        return ans;
-//    }
-//
-//    public List<Station> getListByGenre(String genre){
-//        List<Station> ans = new LinkedList<Station>();
-//        for(Station i : stations){
-//            if(i.getGenre() == genre){
-//                ans.add(i);
-//            }
-//        }
-//        return ans;
-//    }
-
-
     public int size(){
         return stations.size();
     }
