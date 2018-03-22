@@ -32,7 +32,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Activity to display map using google maps api
@@ -47,6 +49,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String STATION_DB_KEY = "stationDB";
     private static final String IMAGE_TAB_TITLE = "Now Playing";
+    private static final String RECOMMENDED_TAB_TITLE = "Explore";
     private static final String RECORDINGS_TAB_TITLE= "Recordings";
     private static final int CACHE_SIZE = 16384;
 
@@ -68,6 +71,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         setupToolBar();
         setupPlayer();
         setupCache();
+        setupRecordings();
 
         //Map init
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -86,13 +90,20 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
     }
 
+    //TODO Add a on resume? method. Text view not updated on resume.
+
     private void setupViewPager(ViewPager viewPager) {
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new ImageFragment(), IMAGE_TAB_TITLE);
+        adapter.addFragment(new ImageFragment(), RECOMMENDED_TAB_TITLE);
         adapter.addFragment(new RecordingsFragment(), RECORDINGS_TAB_TITLE);
         viewPager.setAdapter(adapter);
+
     }
 
+    void setupRecordings() {
+        RecordingsDB.getInstance(MainActivity.this).getRecordings();
+    }
     void setupCache(){
         //Init cache
         try{
@@ -126,6 +137,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         //Init stream status and player singletons, update player with the current stream status
         StreamStatus.getInstance(MainActivity.this).updateStreamStatus();
     }
+
     void setupToolBar  () {
         //App bar
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
@@ -176,11 +188,17 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
             if(stationDBExists){
                 try{
                     myStnDB = Reservoir.get(STATION_DB_KEY, StationDB.class);
-                    if(debug)
-                        Toast.makeText(this, "Got stations from cache " + myStnDB.size(), Toast.LENGTH_SHORT).show();
                     if(myStnDB.size() > 100) {
+                        if(debug)
+                            Toast.makeText(this, "Got stations from cache " + myStnDB.size(), Toast.LENGTH_SHORT).show();
                         plotAllStations(googleMap);
-                        return;
+                    }
+                    else {
+                        if(debug)
+                            Toast.makeText(this, "Getting stations from server ", Toast.LENGTH_SHORT).show();
+
+                        //Otherwise get from server
+                        getStationsFromServer(googleMap);
                     }
                 } catch (IOException e){
                     if(debug)
@@ -188,14 +206,20 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
                     Log.e(TAG, "Exception getting stn db from cache " + e.getMessage());
                 }
             }
+            else {
+                if(debug)
+                    Toast.makeText(this, "Getting stations from server ", Toast.LENGTH_SHORT).show();
+
+                //Otherwise get from server
+                getStationsFromServer(googleMap);
+            }
         } catch (IOException e){
             if(debug)
                 Toast.makeText(this, "Error checking cache " + e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Error checking cache " + e.getMessage());
         }
 
-        //Otherwise get from server
-        getStationsFromServer(googleMap);
+
     }
 
     void getStationsFromServer(final GoogleMap googleMap) {
@@ -276,6 +300,10 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
         StreamStatus.getInstance(MainActivity.this).updateStreamStatus(marker.getTitle(), true);
 
+    }
+
+    public ArrayList<Station> getStations(){
+        return new ArrayList<Station>(myStnDB.getStations().values());
     }
 
 }

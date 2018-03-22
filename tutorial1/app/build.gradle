@@ -44,5 +44,7 @@ dependencies {
     compile 'com.sothree.slidinguppanel:library:3.4.0'
     //Cache
     compile 'com.anupcowkur:reservoir:3.1.0'
+    //Fab
+    compile 'com.github.clans:fab:1.6.4'
 }
 apply plugin: 'com.google.gms.google-services'

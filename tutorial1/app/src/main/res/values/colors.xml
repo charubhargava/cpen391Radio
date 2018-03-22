@@ -2,15 +2,18 @@
 <resources>
     <color name="colorPrimary">#11c5d9</color>
     <color name="colorPrimaryDark">#212121</color>
-    <color name="colorAccent">#00ffc4</color>
+    <color name="colorAccent">#0bddf4</color>
 
     <color name="colorActionBar">#212121</color>
     <color name="colorActionBarText">#ffffff</color>
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="grey">#b1b0b0</color>
+    <color name="lightGrey">#d9d8d8</color>
     <color name="transparent">#00000000</color>
+    <color name="translucent">#78000000</color>
 
-    <color name="slidingPanelColor">#f8212121</color>
+    <color name="slidingPanelColor">#df000000</color>
 
 </resources>

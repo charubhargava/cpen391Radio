@@ -86,7 +86,7 @@ public class StreamStatus {
         String url = sharedPref.getStreamURL();
 
         if(streamId == null){
-            Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mCtx, TAG + " Station not available", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -155,7 +155,7 @@ public class StreamStatus {
                     @Override
                     public void onResponse(JSONObject response) {
                         if(MainActivity.debug)
-                            Toast.makeText(mCtx, "Response: " + response.toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(mCtx, TAG + "Response: " + response.toString(), Toast.LENGTH_LONG).show();
                         try {
                             updateStreamStatusFields(response);
                             sharedPref.updateCurrStreamStatus(getInstance(mCtx));

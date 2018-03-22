@@ -18,11 +18,7 @@ import java.util.Set;
 public class StationDB {
 
     private static final String TAG = "StationDB class";
-
-    //    private static Set<Station> stations = new HashSet<>();
     private static HashMap<String,Station> stations = new HashMap<>();
-
-//    private HashMap<String, Set<Station>> locationMap = new HashMap<>();
 
     public StationDB(){
 
@@ -41,14 +37,6 @@ public class StationDB {
             } catch (JSONException e){
                 Log.e(TAG, e.getMessage());
             }
-//            if(this.locationMap.containsKey(s.getCountryName())) {
-//                this.locationMap.get(s.getCountryName()).add(s);
-//            }
-//            else {
-//                Set<Station> newSet = new HashSet<Station>();
-//                newSet.add(s);
-//                this.locationMap.put(s.getCountryName(),newSet);
-//            }
 
         }
     }

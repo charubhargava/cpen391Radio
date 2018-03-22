@@ -27,7 +27,7 @@ public class Player {
         return mInstance;
     }
 
-    public static void updateSongInfo(String text, boolean isPlaying){
+    public void updateSongInfo(String text, boolean isPlaying){
         TextView stnDisplay = (TextView)((Activity)mCtx).findViewById(R.id.stnDisplay);
         stnDisplay.setText(text);
         ImageButton playPauseBtn = ((Activity)mCtx).findViewById(R.id.playPause);

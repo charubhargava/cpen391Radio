@@ -25,6 +25,11 @@ public class Station {
 
     }
 
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
     public Station(JSONObject jsonObj) {
         try {
             this.id = jsonObj.getString("id");

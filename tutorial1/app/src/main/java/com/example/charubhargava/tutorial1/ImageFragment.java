@@ -19,7 +19,6 @@ public class ImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.song_image_frag,container,false);
-        Toast.makeText(getActivity(), TAG, Toast.LENGTH_SHORT).show();
         return view;
     }
 }

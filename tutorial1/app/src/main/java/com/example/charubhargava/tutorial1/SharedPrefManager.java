@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 
 /**
  * Reference: https://www.simplifiedcoding.net/android-volley-tutorial/#Android-Volley-Tutorial
@@ -15,6 +17,7 @@ public class SharedPrefManager {
     private static final String createUserURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/users";
     private static final String stationsURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stations";
     private static final String streamURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stream";
+    private static final String recordingsURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/recordings";
 
     private static final String SHARED_PREF_NAME = "radioUserSharedPref";
 
@@ -32,7 +35,19 @@ public class SharedPrefManager {
     private static final String GENRE_KEY = "genre";
     private static final String ARTIST_KEY = "name";
 
+    private static final String NEWREC_START_DAY_KEY = "startDay";
+    private static final String NEWREC_END_DAY_KEY = "endDay";
+    private static final String NEWREC_START_MONTH_KEY = "startMonth";
+    private static final String NEWREC_END_MONTH_KEY = "endMonth";
+    private static final String NEWREC_START_YEAR_KEY = "startYear";
+    private static final String NEWREC_END_YEAR_KEY = "endYear";
+    private static final String NEWREC_START_HOUR_KEY = "startHour";
+    private static final String NEWREC_END_HOUR_KEY = "endHour";
+    private static final String NEWREC_START_MINUTE_KEY = "startMinute";
+    private static final String NEWREC_END_MINUTE_KEY = "endMinute";
 
+    private static final String NEWREC_START_DATE_KEY = "startDate";
+    private static final String NEWREC_END_DATE_KEY = "endDate";
 
 
     private static SharedPrefManager mInstance;
@@ -66,13 +81,6 @@ public class SharedPrefManager {
         editor.apply();
 
     }
-
-    //Get user id
-    public String getUserId(){
-        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(ID_KEY, null);
-    }
-
     public void updateCurrStreamStatus(StreamStatus stream){
 
 
@@ -93,6 +101,50 @@ public class SharedPrefManager {
         editor.apply();
 
 
+    }
+
+    public void updateNewRecStartTime(int hour, int minute){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(NEWREC_START_HOUR_KEY, hour);
+        editor.putInt(NEWREC_START_MINUTE_KEY, minute);
+        editor.apply();
+
+    }
+
+    public void updateNewRecEndTime(int hour, int minute){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(NEWREC_END_HOUR_KEY, hour);
+        editor.putInt(NEWREC_END_MINUTE_KEY, minute);
+        editor.apply();
+
+    }
+
+    public void updateNewRecStartDate(int day, int month, int year){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(NEWREC_START_DAY_KEY, day);
+        editor.putInt(NEWREC_START_MONTH_KEY,  month);
+        editor.putInt(NEWREC_START_YEAR_KEY,  year);
+        editor.apply();
+
+    }
+
+    public void updateNewRecEndDate(int day, int month, int year){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(NEWREC_END_DAY_KEY, day);
+        editor.putInt(NEWREC_END_MONTH_KEY,  month);
+        editor.putInt(NEWREC_END_YEAR_KEY,  year);
+        editor.apply();
+
+    }
+
+    //Get user id
+    public String getUserId(){
+        SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(ID_KEY, null);
     }
 
     //Get current station
@@ -124,15 +176,21 @@ public class SharedPrefManager {
         return sharedPreferences.getBoolean(IS_PLAYING_KEY, false);
     }
 
-    public static String getStationsURL() {
+    public String getStationsURL() {
         return stationsURL;
     }
 
-    public static String getStreamURL() {
+    public String getStreamURL() {
         return streamURL;
     }
 
-    public static String getCreateUserURL() {
+    public String getCreateUserURL() {
         return createUserURL;
     }
+
+    public String getRecordingsURL() {
+        return recordingsURL;
+    }
+
+
 }

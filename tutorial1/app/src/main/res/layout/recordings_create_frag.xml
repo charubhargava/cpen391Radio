@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--todo make scroll view-->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:background="@color/transparent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<Button-->
+        <!--android:id="@+id/back"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/translucent"-->
+        <!--android:textColor="@color/lightGrey"-->
+        <!--android:padding="10dp"-->
+        <!--android:text="@string/back" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/spinner_select"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.30"
+            android:textColor="@color/white"
+            android:text="@string/spinner_select"/>
+
+        <Spinner
+            android:id="@+id/spinnerStations"
+            android:layout_width="0dp"
+            android:layout_weight="0.70"
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/pick_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:textColor="@color/white"
+            android:text="@string/pick_title"/>
+
+        <EditText
+            android:id="@+id/rec_title"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:textColor="@color/lightGrey"
+            android:backgroundTint="@color/lightGrey"
+            android:ems="10"
+            android:inputType="text" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/pick_start_date"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:textColor="@color/white"
+            android:text="@string/start_date"/>
+
+        <EditText
+            android:id="@+id/start_date"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:textColor="@color/lightGrey"
+            android:backgroundTint="@color/lightGrey"
+            android:ems="10"
+            android:inputType="date" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/pick_end_date"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:textColor="@color/white"
+            android:text="@string/end_date"/>
+
+        <EditText
+            android:id="@+id/end_date"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:backgroundTint="@color/lightGrey"
+            android:textColor="@color/lightGrey"
+            android:ems="10"
+            android:inputType="date" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/pick_start_time"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:textColor="@color/white"
+            android:text="@string/start_time"/>
+
+        <EditText
+            android:id="@+id/start_time"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:textColor="@color/lightGrey"
+            android:backgroundTint="@color/lightGrey"
+            android:ems="10"
+            android:inputType="time" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/pick_end_time"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:textColor="@color/white"
+            android:text="@string/end_time"/>
+
+        <EditText
+            android:id="@+id/end_time"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false"
+            android:textColor="@color/lightGrey"
+            android:backgroundTint="@color/lightGrey"
+            android:ems="10"
+            android:inputType="time" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/add_recording"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/translucent"
+        android:textColor="@color/lightGrey"
+        android:padding="10dp"
+        android:text="@string/done" />
+
+</LinearLayout>
