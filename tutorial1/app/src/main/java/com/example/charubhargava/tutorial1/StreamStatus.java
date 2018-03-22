@@ -16,6 +16,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -128,6 +129,18 @@ public class StreamStatus {
                         Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onErrorResponse: " + userID);
 
+                    String body;
+                    //get status code here
+                    String statusCode = String.valueOf(error.networkResponse.statusCode);
+                    //get response body and parse with appropriate encoding
+                    if(error.networkResponse.data!=null) {
+                        try {
+                            body = new String(error.networkResponse.data,"UTF-8");
+                            Log.e(TAG,"Body " + body);
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }) {
             @Override

@@ -34,7 +34,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Activity to display map using google maps api
@@ -102,7 +101,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
     }
 
     void setupRecordings() {
-        RecordingsDB.getInstance(MainActivity.this).getRecordings();
+        RecordingsDB.getInstance(MainActivity.this).fetchRecordings();
     }
     void setupCache(){
         //Init cache

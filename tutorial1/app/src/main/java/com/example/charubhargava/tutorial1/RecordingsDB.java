@@ -17,15 +17,18 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Charu Bhargava on 16-Mar-18.
+ * Reference https://guides.codepath.com/android/Creating-Custom-Listeners
  */
 
 public class RecordingsDB {
     private static final String TAG = "RecordingsDB";
-    private static final String RECORDINGS_KEY = "Recordings";
+    private static final String RECORDINGS_KEY = "recordings";
     private static final String STATION_ID_KEY = "stationId";
     private static final String TITLE_KEY = "title";
     private static final String START_DATE_KEY = "startDate";
@@ -36,11 +39,13 @@ public class RecordingsDB {
     private static Context mCtx;
 
 
-    private static ArrayList<Recording> recordings = new ArrayList<>();
+    private static Set<Recording> recordings = new HashSet<>();
+
+    private static recordingsListener listener;
 
     private RecordingsDB (Context context) {
         this.mCtx = context;
-
+        this.listener = null;
     }
 
     public static synchronized  RecordingsDB getInstance(Context context) {
@@ -48,6 +53,10 @@ public class RecordingsDB {
             mInstance = new RecordingsDB(context);
         }
         return mInstance;
+    }
+
+    public static void setListener(recordingsListener listener) {
+        RecordingsDB.listener = listener;
     }
 
     public void createNewRecording(String stationId, String title, long startDate, long endDate){
@@ -78,8 +87,8 @@ public class RecordingsDB {
                 (Request.Method.POST, url, createRecordingJson, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        if(MainActivity.debug)
-                            Toast.makeText(mCtx, TAG + " Response: " + response.toString(), Toast.LENGTH_LONG).show();
+//                        if(MainActivity.debug)
+//                            Toast.makeText(mCtx, TAG + " Response: " + response.toString(), Toast.LENGTH_LONG).show();
                         JSONObject recording = null;
                         try {
                             recording = response.getJSONObject(RECORDING_KEY);
@@ -130,7 +139,7 @@ public class RecordingsDB {
         VolleySingleton.getInstance(mCtx).addToRequestQueue(jsObjRequest);
 
     }
-    public void getRecordings(){
+    public void fetchRecordings(){
         SharedPrefManager sharedPref = SharedPrefManager.getInstance(mCtx);
         String url = sharedPref.getRecordingsURL();
         final String userID = sharedPref.getUserId();
@@ -140,8 +149,8 @@ public class RecordingsDB {
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        if(MainActivity.debug)
-                            Toast.makeText(mCtx, TAG + " Response: " + response.toString(), Toast.LENGTH_LONG).show();
+//                        if(MainActivity.debug)
+//                            Toast.makeText(mCtx, TAG + " Response: " + response.toString(), Toast.LENGTH_LONG).show();
                         addRecordings(response);
                     }
                 }, new Response.ErrorListener() {
@@ -170,10 +179,21 @@ public class RecordingsDB {
             for ( int i = 0; i < recordings.length(); i++ ) {
                 Recording currRecording = new Recording(recordings.getJSONObject(i));
                 RecordingsDB.recordings.add(currRecording);
+                Log.e(TAG, "Added recording " + currRecording.toString());
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
+
+        if(this.listener != null) listener.OnRecordingsReady();
+    }
+
+    public  Set<Recording> getRecordings() {
+        return recordings;
+    }
+
+    public interface recordingsListener{
+        public void OnRecordingsReady();
     }
 }
 

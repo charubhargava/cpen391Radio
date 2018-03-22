@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Charu Bhargava on 20-Mar-18.
@@ -60,14 +61,14 @@ public class RecordingsCreateFragment extends Fragment  {
     public void onViewCreated(View v, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
 
-//        Button back = v.findViewById(R.id.back);
-//        back.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                RecordingsFragment parent = (RecordingsFragment) RecordingsCreateFragment.this.getParentFragment();
-//                parent.setViewPager(0);
-//            }
-//        });
+        Button back = v.findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecordingsFragment parent = (RecordingsFragment) RecordingsCreateFragment.this.getParentFragment();
+                parent.setViewPager(0);
+            }
+        });
 
         Spinner stationsSpinner = v.findViewById(R.id.spinnerStations);
 
@@ -82,13 +83,15 @@ public class RecordingsCreateFragment extends Fragment  {
         stationsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                ((TextView)adapterView.getChildAt(0)).setTextColor(getResources().getColor(R.color.lightGrey));
+                TextView selected = ((TextView)adapterView.getChildAt(0));
+                if(selected != null) selected.setTextColor(getResources().getColor(R.color.lightGrey));
                 selectedStationID = mStations.get(i).getId();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                ((TextView)adapterView.getChildAt(0)).setTextColor(getResources().getColor(R.color.lightGrey));
+                TextView selected = ((TextView)adapterView.getChildAt(0));
+                if(selected != null) selected.setTextColor(getResources().getColor(R.color.lightGrey));
             }
         });
 
@@ -191,7 +194,10 @@ public class RecordingsCreateFragment extends Fragment  {
         c.set(Calendar.MINUTE, minute);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
-        long time = c.getTimeInMillis() / 1000L;
+
+        Calendar utcCal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        utcCal.setTimeInMillis(c.getTimeInMillis());
+        long time = utcCal.getTimeInMillis() / 1000L;
         Log.d(TAG, Long.toString(time));
         return  time;
     }

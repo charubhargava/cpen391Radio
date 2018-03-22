@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--todo make scroll view-->
+
+<ScrollView
+    android:fillViewport="true"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="10dp"
-    android:background="@color/transparent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:background="@color/transparent">
 
-    <!--<Button-->
-        <!--android:id="@+id/back"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@color/translucent"-->
-        <!--android:textColor="@color/lightGrey"-->
-        <!--android:padding="10dp"-->
-        <!--android:text="@string/back" />-->
+    <Button
+        android:id="@+id/back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/translucent"
+        android:textColor="@color/lightGrey"
+        android:padding="10dp"
+        android:text="@string/back" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -184,3 +190,4 @@
         android:text="@string/done" />
 
 </LinearLayout>
+</ScrollView>
