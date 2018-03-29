@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,6 @@ public class RecordingsFragment extends Fragment {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) view.findViewById(R.id.recordingsContainer);
         setupViewPager(mViewPager);
-
         return view;
     }
 
@@ -49,6 +49,11 @@ public class RecordingsFragment extends Fragment {
 
     public void setViewPager(int fragmentNumber){
         mViewPager.setCurrentItem(fragmentNumber);
+        if(fragmentNumber == 0){
+            SectionsPageAdapter adapter = (SectionsPageAdapter) mViewPager.getAdapter();
+            RecordingsListFragment f = (RecordingsListFragment) adapter.getItem(mViewPager.getCurrentItem());
+            f.updateRecordings();
+        }
     }
 
 }

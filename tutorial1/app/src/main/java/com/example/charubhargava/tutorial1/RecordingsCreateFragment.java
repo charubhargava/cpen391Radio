@@ -73,7 +73,7 @@ public class RecordingsCreateFragment extends Fragment  {
         Spinner stationsSpinner = v.findViewById(R.id.spinnerStations);
 
         final RecordingsFragment parentFrag = (RecordingsFragment) getParentFragment();
-        MainActivity parentAct = (MainActivity) parentFrag.getActivity();
+        final MainActivity parentAct = (MainActivity) parentFrag.getActivity();
         mStations = parentAct.getStations();
 
         ArrayAdapter<Station> dataAdapter = new ArrayAdapter<Station>(parentAct, android.R.layout.simple_spinner_item, mStations );

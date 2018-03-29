@@ -38,12 +38,22 @@ public class Recording {
         return this.title + " (" + this.status + ") ";
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getStatus() {
+
+        return status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         Recording recording = (Recording) o;
+
 
         return id.equals(recording.id);
     }
