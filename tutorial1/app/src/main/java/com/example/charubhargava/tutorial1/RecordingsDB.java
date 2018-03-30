@@ -151,8 +151,6 @@ public class RecordingsDB {
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-//                        if(MainActivity.debug)
-//                            Toast.makeText(mCtx, TAG + " Response: " + response.toString(), Toast.LENGTH_LONG).show();
                         addRecordings(response);
                     }
                 }, new Response.ErrorListener() {
@@ -175,7 +173,7 @@ public class RecordingsDB {
         VolleySingleton.getInstance(mCtx).addToRequestQueue(jsObjRequest);
     }
 
-    public boolean deleteRecording(String id){
+    public boolean deleteRecording(final String id){
         final boolean[] success = {false};
         SharedPrefManager sharedPref = SharedPrefManager.getInstance(mCtx);
         String url = sharedPref.getRecordingsURL();
@@ -194,8 +192,7 @@ public class RecordingsDB {
                     public void onResponse(JSONObject response) {
                         try {
                             success[0] = response.getBoolean(DELETE_RESPONSE_KEY);
-                            if(success[0])
-                                fetchRecordings();//TODO why doesnt this do anything
+                            if(success[0]) removeRecording(id);
                         } catch (JSONException e) {
                             Log.e(TAG , e.getMessage());
                         }
@@ -204,10 +201,7 @@ public class RecordingsDB {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(mCtx, TAG + " Error from server: " + error.getMessage() + " " + error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-//                        Log.e(TAG, error.toString());
-//                        Log.e(TAG, error.getStackTrace().toString());
-
+                        Toast.makeText(mCtx, TAG + " Error from server: " + error.getMessage(), Toast.LENGTH_LONG).show();
                         String body;
                         //get status code here
                         String statusCode = String.valueOf(error.networkResponse.statusCode);
@@ -228,12 +222,19 @@ public class RecordingsDB {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("User-Agent", "android");
                 params.put("userId", userID);
-                Log.e(TAG, "user id" + userID);
                 return params;
             }
         };
         VolleySingleton.getInstance(mCtx).addToRequestQueue(jsObjRequest);
         return success[0];
+    }
+
+    //Remove recording from set
+    private void removeRecording(String id){
+        for(Recording rec : RecordingsDB.recordings){
+            if(rec.getId().equals(id)) recordings.remove(rec);
+        }
+        if(RecordingsDB.listener != null) listener.OnRecordingsReady();
     }
 
     private void addRecordings(JSONObject jsonObject){
@@ -248,7 +249,7 @@ public class RecordingsDB {
             Log.e(TAG, e.getMessage());
         }
 
-        if(this.listener != null) listener.OnRecordingsReady();
+        if(RecordingsDB.listener != null) listener.OnRecordingsReady();
     }
 
     public  Set<Recording> getRecordings() {

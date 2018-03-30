@@ -48,12 +48,12 @@ public class RecordingsListFragment extends Fragment {
         mRecordingsDB.fetchRecordings();
 
         final ListView recordingsListView = view.findViewById(R.id.recordings_list);
-        mRecordingsDB.setListener(new RecordingsDB.recordingsListener() {
+        RecordingsDB.setListener(new RecordingsDB.recordingsListener() {
             @Override
             public void OnRecordingsReady() {
                 if (getContext() != null) {
-                    final ArrayList<Recording> recordings = new ArrayList<>();
-                    recordings.addAll(RecordingsDB.getInstance(getContext()).getRecordings());
+                    final ArrayList<Recording> recordings = new ArrayList<>(RecordingsDB.getInstance(getContext()).getRecordings());
+//                    recordings.addAll(RecordingsDB.getInstance(getContext()).getRecordings());
                     RecordingArrayAdaptor dataAdapter = new RecordingArrayAdaptor(getContext(), R.layout.recording_list_item, recordings);
                     recordingsListView.setAdapter(dataAdapter);
 

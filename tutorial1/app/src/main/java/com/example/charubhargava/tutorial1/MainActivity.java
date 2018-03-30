@@ -49,7 +49,8 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
     private static final String STATION_DB_KEY = "stationDB";
     private static final String IMAGE_TAB_TITLE = "Now Playing";
     private static final String RECOMMENDED_TAB_TITLE = "Explore";
-    private static final String RECORDINGS_TAB_TITLE= "Recordings";
+    private static final String HISTORY_TAB_TITLE = "Stats";
+    private static final String RECORDINGS_TAB_TITLE = "Record";
     private static final int CACHE_SIZE = 16384;
 
 
@@ -95,6 +96,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new ImageFragment(), IMAGE_TAB_TITLE);
         adapter.addFragment(new ImageFragment(), RECOMMENDED_TAB_TITLE);
+        adapter.addFragment(new ImageFragment(), HISTORY_TAB_TITLE);
         adapter.addFragment(new RecordingsFragment(), RECORDINGS_TAB_TITLE);
         viewPager.setAdapter(adapter);
 
