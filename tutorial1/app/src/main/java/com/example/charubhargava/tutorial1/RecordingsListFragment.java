@@ -1,5 +1,6 @@
 package com.example.charubhargava.tutorial1;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.github.clans.fab.FloatingActionButton;
+//import com.github.clans.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -80,26 +81,27 @@ public class RecordingsListFragment extends Fragment {
             }
         });
 
-        FloatingActionButton fab_delete = view.findViewById(R.id.fab_delete);
-        fab_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ImageButton deleteButton = view.findViewById(R.id.deleteRecording);
-                deleteButton.setVisibility(View.VISIBLE);
-                deleteButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //delete recordings
-                        Toast.makeText(getContext(), "delete recordings", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
+//        FloatingActionButton fab_delete = view.findViewById(R.id.fab_delete);
+//        fab_delete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                ImageButton deleteButton = view.findViewById(R.id.deleteRecording);
+//                deleteButton.setVisibility(View.VISIBLE);
+//                deleteButton.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        //delete recordings
+//
+//                        Toast.makeText(getContext(), "delete recordings", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        });
 
     }
 
     public void updateRecordings() {
-        mRecordingsDB.fetchRecordings();
+        if(mRecordingsDB != null) mRecordingsDB.fetchRecordings();
     }
 
 }

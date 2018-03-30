@@ -16,58 +16,59 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            android:clickable="true"
+            android:focusable="true"
             android:background="@color/transparent"
-            android:backgroundTint="@color/transparent"
            />
     </LinearLayout>
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab_add"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="end|bottom"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--fab:rippleColor="@color/colorPrimaryDark"-->
-        <!--android:src="@drawable/ic_add_white_24dp"-->
-        <!--android:layout_margin="16dp"-->
-        <!--android:layout_alignParentEnd="true" />-->
-
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/fab_menu"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        fab:menu_colorNormal="@color/colorPrimary"
         fab:rippleColor="@color/colorPrimaryDark"
+        android:src="@drawable/fab_add"
         android:layout_margin="16dp"
-        android:layout_alignParentEnd="true"
-        fab:menu_fab_size="normal"
-        fab:menu_colorRipple="#99FFFFFF"
-        fab:menu_colorPressed="@color/colorPrimary"
-        fab:menu_labels_colorRipple="@color/colorPrimaryDark"
-        fab:menu_icon="@drawable/ic_mode_edit_white_24dp">
+        android:layout_alignParentEnd="true" />
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/fab_add"
-            fab:fab_size="mini"
-            fab:fab_colorNormal="@color/colorPrimary"
-            fab:fab_label="Add Recording" />
+    <!--<com.github.clans.fab.FloatingActionMenu-->
+        <!--android:id="@+id/fab_menu"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="end|bottom"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--fab:menu_colorNormal="@color/colorPrimary"-->
+        <!--fab:rippleColor="@color/colorPrimaryDark"-->
+        <!--android:layout_margin="16dp"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--fab:menu_fab_size="normal"-->
+        <!--fab:menu_colorRipple="#99FFFFFF"-->
+        <!--fab:menu_colorPressed="@color/colorPrimary"-->
+        <!--fab:menu_labels_colorRipple="@color/colorPrimaryDark"-->
+        <!--fab:menu_icon="@drawable/ic_mode_edit_white_24dp">-->
 
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fab_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_delete_white_24dp"
-            fab:fab_size="mini"
-            fab:fab_colorNormal="@color/colorPrimary"
-            fab:fab_label="Delete Recording" />
+        <!--<com.github.clans.fab.FloatingActionButton-->
+            <!--android:id="@+id/fab_add"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/fab_add"-->
+            <!--fab:fab_size="mini"-->
+            <!--fab:fab_colorNormal="@color/colorPrimary"-->
+            <!--fab:fab_label="Add Recording" />-->
 
-    </com.github.clans.fab.FloatingActionMenu>
+        <!--<com.github.clans.fab.FloatingActionButton-->
+            <!--android:id="@+id/fab_delete"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/ic_delete_white_24dp"-->
+            <!--fab:fab_size="mini"-->
+            <!--fab:fab_colorNormal="@color/colorPrimary"-->
+            <!--fab:fab_label="Delete Recording" />-->
+
+    <!--</com.github.clans.fab.FloatingActionMenu>-->
 
 </RelativeLayout>

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -43,15 +44,23 @@ public class RecordingArrayAdaptor extends ArrayAdapter<Recording>{
             row.setTag(holder);
             holder.titleTxt = (TextView)row.findViewById(R.id.rec_title);
             holder.statusTxt = (TextView)row.findViewById(R.id.rec_status);
+            holder.deleteButton = (ImageButton) row.findViewById(R.id.deleteRecording);
         }
         else{
             holder = (RecordingHolder)row.getTag();
         }
 
-        Recording curRec = mRecordings.get(position);
+        final Recording curRec = mRecordings.get(position);
         holder.titleTxt.setText(curRec.getTitle());
         holder.statusTxt.setText(curRec.getStatus());
-
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //call delete recording method.
+                RecordingsDB.getInstance(getContext()).deleteRecording(curRec.getId());
+                //now delete this item from the view TODO
+            }
+        });
         return row;
 
     }
@@ -61,5 +70,8 @@ public class RecordingArrayAdaptor extends ArrayAdapter<Recording>{
     static class RecordingHolder{
         TextView titleTxt;
         TextView statusTxt;
+        ImageButton deleteButton;
     }
+
+
 }

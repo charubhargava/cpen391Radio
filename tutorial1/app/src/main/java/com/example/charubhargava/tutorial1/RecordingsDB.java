@@ -34,6 +34,8 @@ public class RecordingsDB {
     private static final String START_DATE_KEY = "startDate";
     private static final String END_DATE_KEY = "endDate";
     private static final String RECORDING_KEY = "recording";
+    private static final String RECORDING_ID_KEY = "recordingId";
+    private static final String DELETE_RESPONSE_KEY = "ok";
 
     private static RecordingsDB mInstance;
     private static Context mCtx;
@@ -171,6 +173,67 @@ public class RecordingsDB {
             }
         };
         VolleySingleton.getInstance(mCtx).addToRequestQueue(jsObjRequest);
+    }
+
+    public boolean deleteRecording(String id){
+        final boolean[] success = {false};
+        SharedPrefManager sharedPref = SharedPrefManager.getInstance(mCtx);
+        String url = sharedPref.getRecordingsURL();
+        url+= ("/" + id);
+        final String userID = sharedPref.getUserId();
+
+        final JSONObject deleteRecordingJson = new JSONObject();
+        try {
+            deleteRecordingJson.put(RECORDING_ID_KEY, id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.DELETE, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            success[0] = response.getBoolean(DELETE_RESPONSE_KEY);
+                            if(success[0])
+                                fetchRecordings();//TODO why doesnt this do anything
+                        } catch (JSONException e) {
+                            Log.e(TAG , e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(mCtx, TAG + " Error from server: " + error.getMessage() + " " + error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+//                        Log.e(TAG, error.toString());
+//                        Log.e(TAG, error.getStackTrace().toString());
+
+                        String body;
+                        //get status code here
+                        String statusCode = String.valueOf(error.networkResponse.statusCode);
+                        Log.e(TAG, "status code " + statusCode);
+                        //get response body and parse with appropriate encoding
+                        if(error.networkResponse.data!=null) {
+                            try {
+                                body = new String(error.networkResponse.data,"UTF-8");
+                                Log.e(TAG,"Body " + body);
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("User-Agent", "android");
+                params.put("userId", userID);
+                Log.e(TAG, "user id" + userID);
+                return params;
+            }
+        };
+        VolleySingleton.getInstance(mCtx).addToRequestQueue(jsObjRequest);
+        return success[0];
     }
 
     private void addRecordings(JSONObject jsonObject){
