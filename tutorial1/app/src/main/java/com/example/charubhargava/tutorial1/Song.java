@@ -19,14 +19,14 @@ public class Song {
 
     }
 
-    public Song(JSONObject jsonObj) {
-        try {
+    public Song(JSONObject jsonObj) throws JSONException {
+//        try {
             this.artist = jsonObj.getString(ARTIST_KEY);
             this.title = jsonObj.getString(TITLE_KEY);
             this.year = jsonObj.getInt(YEAR_KEY);
-        } catch ( JSONException e){
-            Log.e(TAG, e.getMessage());
-        }
+//        } catch ( JSONException e){
+//            Log.e(TAG, e.getMessage());
+//        }
     }
 
     public String getArtist() {

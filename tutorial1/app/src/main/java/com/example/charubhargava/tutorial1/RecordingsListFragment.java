@@ -32,7 +32,6 @@ public class RecordingsListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recordings_list_frag,container,false);
-        Toast.makeText(getContext(), "On create view", Toast.LENGTH_SHORT).show();
         return view;
     }
 
@@ -40,8 +39,6 @@ public class RecordingsListFragment extends Fragment {
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
-
-        Toast.makeText(getContext(), "View Created", Toast.LENGTH_SHORT).show();
         //Get recordings and display them
         //update stream status for recording
         mRecordingsDB = RecordingsDB.getInstance(getContext());

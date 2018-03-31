@@ -27,9 +27,14 @@ public class Player {
         return mInstance;
     }
 
-    public void updateSongInfo(String text, boolean isPlaying){
+    public void updateSongInfo(String stn, String song, String artist, boolean isPlaying){
         TextView stnDisplay = (TextView)((Activity)mCtx).findViewById(R.id.stnDisplay);
-        stnDisplay.setText(text);
+        stnDisplay.setText(stn);
+
+        TextView songDisplay = (TextView)((Activity)mCtx).findViewById(R.id.songDisplay);
+        String songTxt = song + " by " + artist;
+        songDisplay.setText(songTxt);
+
         ImageButton playPauseBtn = ((Activity)mCtx).findViewById(R.id.playPause);
         if(isPlaying){
             //image pause

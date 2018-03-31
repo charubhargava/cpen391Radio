@@ -110,8 +110,7 @@ public class StreamStatus {
 
                         updateStreamStatusFields(response);
                         sharedPref.updateCurrStreamStatus(getInstance(mCtx));
-                        Player.getInstance(mCtx).updateSongInfo(currentStation.getName() + "\n" +
-                                currentSong.getTitle() + " - " + currentSong.getArtist(),isPlaying);
+                        Player.getInstance(mCtx).updateSongInfo(currentStation.getName(),currentSong.getTitle(),currentSong.getArtist(),isPlaying);
                     } catch (JSONException e){
                         if(MainActivity.debug)
                             Toast.makeText(mCtx, "Error in update stream status: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -127,20 +126,20 @@ public class StreamStatus {
                         Toast.makeText(mCtx, "Error from server: " + TAG + error.getMessage(), Toast.LENGTH_LONG).show();
                     else
                         Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG, "onErrorResponse: " + userID);
+                    Log.e(TAG, "onErrorResponse: " + userID);
 
-                    String body;
-                    //get status code here
-                    String statusCode = String.valueOf(error.networkResponse.statusCode);
-                    //get response body and parse with appropriate encoding
-                    if(error.networkResponse.data!=null) {
-                        try {
-                            body = new String(error.networkResponse.data,"UTF-8");
-                            Log.e(TAG,"Body " + body);
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                    }
+//                    String body;
+//                    //get status code here
+//                    String statusCode = String.valueOf(error.networkResponse.statusCode);
+//                    //get response body and parse with appropriate encoding
+//                    if(error.networkResponse.data!=null) {
+//                        try {
+//                            body = new String(error.networkResponse.data,"UTF-8");
+//                            Log.e(TAG,"Body " + body);
+//                        } catch (UnsupportedEncodingException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
                 }
             }) {
             @Override
@@ -172,8 +171,7 @@ public class StreamStatus {
                         try {
                             updateStreamStatusFields(response);
                             sharedPref.updateCurrStreamStatus(getInstance(mCtx));
-                            Player.getInstance(mCtx).updateSongInfo(currentStation.getName() + "\n" +
-                                    currentSong.getTitle() + " - " + currentSong.getArtist(),isPlaying);
+                            Player.getInstance(mCtx).updateSongInfo(currentStation.getName(),currentSong.getTitle() , currentSong.getArtist(),isPlaying);
                         } catch (JSONException e){
                             Toast.makeText(mCtx, "Error in update stream status (get): " + e.getMessage(), Toast.LENGTH_LONG).show();
 

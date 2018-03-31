@@ -112,22 +112,20 @@ public class RecordingsDB {
                         Toast.makeText(mCtx, TAG + " Error from server: " + error.getMessage() , Toast.LENGTH_LONG).show();
                         Log.e(TAG, error.toString());
                         Log.e(TAG, error.getStackTrace().toString());
-
-                        String body;
-                        //get status code here
-                        String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if(error.networkResponse.data!=null) {
-                            try {
-                                body = new String(error.networkResponse.data,"UTF-8");
-                                Log.e(TAG,"Body " + body);
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
+                        if(error.networkResponse != null) {
+                            String body;
+                            //get status code here
+                            String statusCode = String.valueOf(error.networkResponse.statusCode);
+                            //get response body and parse with appropriate encoding
+                            if (error.networkResponse.data != null) {
+                                try {
+                                    body = new String(error.networkResponse.data, "UTF-8");
+                                    Log.e(TAG, "Body " + body);
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
-
-
-
                     }
                 }) {
             @Override

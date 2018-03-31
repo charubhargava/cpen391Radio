@@ -18,6 +18,8 @@ public class SharedPrefManager {
     private static final String stationsURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stations";
     private static final String streamURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stream";
     private static final String recordingsURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/recordings";
+    private static final String recommendURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/recommendations";
+    private static final String statsURL = "http://ec2-54-201-183-2.us-west-2.compute.amazonaws.com:8080/stats";
 
     private static final String SHARED_PREF_NAME = "radioUserSharedPref";
 
@@ -191,6 +193,13 @@ public class SharedPrefManager {
     public String getRecordingsURL() {
         return recordingsURL;
     }
+    public String getStatsURL() {
+        return statsURL;
+    }
 
+    public String getRecommendURL() {
+
+        return recommendURL;
+    }
 
 }

@@ -30,8 +30,12 @@ public class Station {
         return this.name;
     }
 
-    public Station(JSONObject jsonObj) {
-        try {
+    public String getTitle() {
+        return name;
+    }
+
+    public Station(JSONObject jsonObj) throws JSONException{
+//        try {
             this.id = jsonObj.getString("id");
             this.name = jsonObj.getString("name");
             this.country = jsonObj.getJSONObject("country");
@@ -43,9 +47,9 @@ public class Station {
             this.genre = jsonObj.getString("genre");
             this.createdAt = jsonObj.getLong("createdAt");
             this.updatedAt = jsonObj.getLong("updatedAt");
-        } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
-        }
+//        } catch (JSONException e) {
+//            Log.e(TAG, e.getMessage());
+//        }
     }
 
 

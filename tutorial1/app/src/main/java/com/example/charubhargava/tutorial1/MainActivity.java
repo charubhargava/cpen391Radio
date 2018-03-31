@@ -90,13 +90,18 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
     }
 
-    //TODO Add a on resume? method. Text view not updated on resume.
+    //TODO Test this
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StreamStatus.getInstance(MainActivity.this).updateStreamStatus();
+    }
 
     private void setupViewPager(ViewPager viewPager) {
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new ImageFragment(), IMAGE_TAB_TITLE);
-        adapter.addFragment(new ImageFragment(), RECOMMENDED_TAB_TITLE);
-        adapter.addFragment(new ImageFragment(), HISTORY_TAB_TITLE);
+        adapter.addFragment(new RecommendFragment(), RECOMMENDED_TAB_TITLE);
+        adapter.addFragment(new StatsFragment(), HISTORY_TAB_TITLE);
         adapter.addFragment(new RecordingsFragment(), RECORDINGS_TAB_TITLE);
         viewPager.setAdapter(adapter);
 

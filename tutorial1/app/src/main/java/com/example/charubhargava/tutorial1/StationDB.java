@@ -28,14 +28,16 @@ public class StationDB {
 
         for (int i = 0; i < stations.length(); i++)
         {
+            Station s;
             try {
-                Station s = new Station(stations.getJSONObject(i));
-                String id = s.getId();
-                if (!this.stations.containsKey(id)) {
-                    this.stations.put(id, s);
-                }
+                s = new Station(stations.getJSONObject(i));
             } catch (JSONException e){
-                Log.e(TAG, e.getMessage());
+                Log.d(TAG, e.getMessage());
+                continue;
+            }
+            String id = s.getId();
+            if (!StationDB.stations.containsKey(id)) {
+                StationDB.stations.put(id, s);
             }
 
         }
