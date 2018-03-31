@@ -32,13 +32,14 @@ public class StreamStatus {
     private static final String CURRENT_SONG_KEY = "currentSong";
     private static final String CURRENT_STATION_KEY = "currentStation";
     private static final String CURRENT_STREAM_URL_KEY = "currentStreamUrl";
-
     private Boolean isPlaying;
     private Station currentStation = new Station();
     private String currentStreamUrl;
     private Song currentSong = new Song();
+    private String imageUrl = "";
     private static StreamStatus mInstance;
     private static Context mCtx;
+    private static songChangeListener listener;
 
 
     private StreamStatus(Context context) {
@@ -47,6 +48,7 @@ public class StreamStatus {
         this.currentStreamUrl = "";
         this.currentStation = new Station();
         this.currentSong = new Song();
+        this.listener = null;
     }
 
     public static synchronized  StreamStatus getInstance(Context context) {
@@ -56,14 +58,6 @@ public class StreamStatus {
         return mInstance;
     }
 
-
-    private void updateStreamStatusFields(JSONObject jsonObj) throws JSONException {
-        Log.d(TAG, "jsonobj StreamStatus: " + jsonObj.toString());
-        this.isPlaying = jsonObj.getBoolean(STREAM_STATUS_KEY);
-        this.currentStation = new Station(jsonObj.getJSONObject(CURRENT_STATION_KEY));
-        this.currentStreamUrl = jsonObj.getString(CURRENT_STREAM_URL_KEY);
-        this.currentSong = new Song(jsonObj.getJSONObject(CURRENT_SONG_KEY));
-    }
 
     public Boolean getPlaying() {
         return isPlaying;
@@ -79,6 +73,46 @@ public class StreamStatus {
 
     public Song getCurrentSong() {
         return currentSong;
+    }
+
+    public String getImageUrl(){
+        return imageUrl;
+    }
+
+    public static void setListener(songChangeListener listener) {
+        StreamStatus.listener = listener;
+    }
+
+    public interface songChangeListener{
+        public void OnSongChange();
+    }
+
+    private void updateStreamStatusFields(JSONObject jsonObj)  {
+//        Log.d(TAG, "jsonobj StreamStatus: " + jsonObj.toString());
+
+        boolean playing;
+        Station currStn;
+        String currStreamUrl;
+        Song currSong;
+        try {
+            playing = jsonObj.getBoolean(STREAM_STATUS_KEY);
+            currStn = new Station(jsonObj.getJSONObject(CURRENT_STATION_KEY));
+            currStreamUrl = jsonObj.getString(CURRENT_STREAM_URL_KEY);
+            currSong = new Song(jsonObj.getJSONObject(CURRENT_SONG_KEY));
+        } catch (JSONException e){
+            Log.e(TAG, e.getMessage());
+            Toast.makeText(mCtx, "Error updating current song", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        this.isPlaying = playing;
+        this.currentStation = currStn;
+        this.currentStreamUrl = currStreamUrl;
+        this.currentSong = currSong;
+        this.imageUrl = currSong.getImageUrl();
+//        Log.d(TAG, "Updating player ");
+        if(StreamStatus.listener != null) listener.OnSongChange();
+//        Player.getInstance(mCtx).updateSongInfo(currentStation.getName(),currentSong.getTitle(),currentSong.getArtist(),isPlaying);
+//        Log.d(TAG, "Updated player ");
     }
 
     public void updateStreamStatus(final String streamId, final boolean isPlaying){
@@ -106,40 +140,30 @@ public class StreamStatus {
                 public void onResponse(JSONObject response) {
                     if(MainActivity.debug)
                         Toast.makeText(mCtx, "Response: " + response.toString(), Toast.LENGTH_LONG).show();
-                    try {
-
                         updateStreamStatusFields(response);
                         sharedPref.updateCurrStreamStatus(getInstance(mCtx));
-                        Player.getInstance(mCtx).updateSongInfo(currentStation.getName(),currentSong.getTitle(),currentSong.getArtist(),isPlaying);
-                    } catch (JSONException e){
-                        if(MainActivity.debug)
-                            Toast.makeText(mCtx, "Error in update stream status: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        else
-                            Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
-                    }
+
                 }
             }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    if(MainActivity.debug)
-                        Toast.makeText(mCtx, "Error from server: " + TAG + error.getMessage(), Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "onErrorResponse: " + userID);
+                    Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
 
-//                    String body;
-//                    //get status code here
-//                    String statusCode = String.valueOf(error.networkResponse.statusCode);
-//                    //get response body and parse with appropriate encoding
-//                    if(error.networkResponse.data!=null) {
-//                        try {
-//                            body = new String(error.networkResponse.data,"UTF-8");
-//                            Log.e(TAG,"Body " + body);
-//                        } catch (UnsupportedEncodingException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
+                    String body;
+                    //get status code here
+                    if(error.networkResponse != null){
+                        String statusCode = String.valueOf(error.networkResponse.statusCode);
+                        //get response body and parse with appropriate encoding
+                        if (error.networkResponse.data != null) {
+                            try {
+                                body = new String(error.networkResponse.data, "UTF-8");
+                                Log.e(TAG, "Body " + body);
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } else Log.e(TAG, "Error from server " + error.getMessage());
                 }
             }) {
             @Override
@@ -147,6 +171,7 @@ public class StreamStatus {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("User-Agent", USER_AGENT);
                 params.put("userId", userID);
+                Log.d(TAG, "user id is: " + userID);
                 return params;
             }
         };
@@ -168,22 +193,30 @@ public class StreamStatus {
                     public void onResponse(JSONObject response) {
                         if(MainActivity.debug)
                             Toast.makeText(mCtx, TAG + "Response: " + response.toString(), Toast.LENGTH_LONG).show();
-                        try {
                             updateStreamStatusFields(response);
                             sharedPref.updateCurrStreamStatus(getInstance(mCtx));
-                            Player.getInstance(mCtx).updateSongInfo(currentStation.getName(),currentSong.getTitle() , currentSong.getArtist(),isPlaying);
-                        } catch (JSONException e){
-                            Toast.makeText(mCtx, "Error in update stream status (get): " + e.getMessage(), Toast.LENGTH_LONG).show();
-
-                        }
+//                            Player.getInstance(mCtx).updateSongInfo(currentStation.getName(),currentSong.getTitle() , currentSong.getArtist(),isPlaying);
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-                        Toast.makeText(mCtx, "Error from server: " + error.toString() , Toast.LENGTH_LONG).show();
-                        Log.d(TAG, "onErrorResponse: " + userID);
+                        Toast.makeText(mCtx, "Station not available", Toast.LENGTH_SHORT).show();
+
+                        String body;
+                        //get status code here
+                        if(error.networkResponse != null){
+                            String statusCode = String.valueOf(error.networkResponse.statusCode);
+                            //get response body and parse with appropriate encoding
+                            if (error.networkResponse.data != null) {
+                                try {
+                                    body = new String(error.networkResponse.data, "UTF-8");
+                                    Log.e(TAG, "Body " + body);
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } else Log.e(TAG, "Error from server " + error.getMessage());
                     }
                 }) {
             @Override
@@ -196,9 +229,6 @@ public class StreamStatus {
         };
         VolleySingleton.getInstance(mCtx).addToRequestQueue(jsObjRequest);
     }
-
-
-
 
 }
 

@@ -22,15 +22,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         SharedPrefManager sharedPref = SharedPrefManager.getInstance(getApplicationContext());
 
-        Log.e(TAG, "From: " + remoteMessage.getFrom());
+        Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         Map<String, String> data = remoteMessage.getData();
         JSONObject dataJson = new JSONObject(data);
-        Log.e(TAG, "MSG: " + dataJson);
+        Log.d(TAG, "MSG: " + dataJson);
         try {
             if(dataJson.getString("currentStation") != null) {
                 StreamStatus.getInstance(getApplicationContext()).updateStreamStatus();
-                Log.e(TAG, "song: " + sharedPref.getCurrSong());
+                Log.d(TAG, "song: " + sharedPref.getCurrSong());
             }
         } catch (JSONException e) {
             e.printStackTrace();

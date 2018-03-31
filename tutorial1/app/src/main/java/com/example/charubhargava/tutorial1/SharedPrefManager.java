@@ -31,11 +31,11 @@ public class SharedPrefManager {
     private static final String CURR_STREAM_URL_KEY = "currentStreamUrl";
     private static final String CURR_SONG_KEY = "currentSong";
     private static final String STREAM_ID_KEY = "id";
-    private static final String STATION_NAME_KEY = "name";
+    private static final String STATION_NAME_KEY = "StnName";
     private static final String COUNTRY_KEY = "country";
-    private static final String COUNTRY_NAME_KEY = "name";
+    private static final String COUNTRY_NAME_KEY = "CountryName";
     private static final String GENRE_KEY = "genre";
-    private static final String ARTIST_KEY = "name";
+    private static final String ARTIST_KEY = "ArtistName";
 
     private static final String NEWREC_START_DAY_KEY = "startDay";
     private static final String NEWREC_END_DAY_KEY = "endDay";

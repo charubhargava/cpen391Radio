@@ -21,4 +21,19 @@ public class ImageFragment extends Fragment {
         View view = inflater.inflate(R.layout.song_image_frag,container,false);
         return view;
     }
+
+//    @Override
+//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//        StreamStatus.setListener(new StreamStatus.imageChangeListener() {
+//            @Override
+//            public void OnImageChange() {
+//                String imageUrl = StreamStatus.getInstance(getContext()).getImageUrl();
+//                if(!(imageUrl == null || imageUrl.equals(""))){
+//                    //set image glide
+//                    Toast.makeText(getContext(), "Image change", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//    }
 }

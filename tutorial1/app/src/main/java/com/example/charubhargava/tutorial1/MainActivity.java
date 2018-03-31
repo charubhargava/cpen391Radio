@@ -25,11 +25,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -94,7 +96,6 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
     @Override
     protected void onResume() {
         super.onResume();
-        StreamStatus.getInstance(MainActivity.this).updateStreamStatus();
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -125,10 +126,13 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         //Set up play/pause button on click listener
         final SharedPrefManager sharedPref = SharedPrefManager.getInstance(MainActivity.this);
         final ImageButton playPauseBtn = findViewById(R.id.playPause);
+        final TextView stnDisplay = (TextView) findViewById(R.id.stnDisplay);
+        final TextView songDisplay = (TextView) findViewById(R.id.songDisplay);
+        final StreamStatus mStreamStatus = StreamStatus.getInstance(MainActivity.this);
         playPauseBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                boolean isPlaying = !sharedPref.getIsPlaying();
-                StreamStatus.getInstance(MainActivity.this).updateStreamStatus(sharedPref.getCurrStreamID(), isPlaying );
+                boolean isPlaying = !mStreamStatus.getPlaying();
+                mStreamStatus.updateStreamStatus(sharedPref.getCurrStreamID(), isPlaying );
                 if(isPlaying){
                     //image pause
                     playPauseBtn.setImageResource(R.drawable.ic_pause_white_24dp);
@@ -141,7 +145,19 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         });
 
         //Init stream status and player singletons, update player with the current stream status
-        StreamStatus.getInstance(MainActivity.this).updateStreamStatus();
+        mStreamStatus.updateStreamStatus();
+        StreamStatus.setListener(new StreamStatus.songChangeListener() {
+            @Override
+            public void OnSongChange() {
+                stnDisplay.setText(mStreamStatus.getCurrentStation().getName());
+                String songDisplayText = mStreamStatus.getCurrentSong().getTitle() + " - " + mStreamStatus.getCurrentSong().getArtist();
+                songDisplay.setText(songDisplayText);
+                //TODO make text scroll if too big
+                boolean isPlaying = mStreamStatus.getPlaying();
+                if(isPlaying) playPauseBtn.setImageResource(R.drawable.ic_pause_white_24dp);
+                else playPauseBtn.setImageResource(R.drawable.ic_play_arrow_white_24dp);
+            }
+        });
     }
 
     void setupToolBar  () {

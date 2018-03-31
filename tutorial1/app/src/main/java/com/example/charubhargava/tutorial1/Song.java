@@ -1,8 +1,5 @@
 package com.example.charubhargava.tutorial1;
 
-
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,22 +8,20 @@ public class Song {
     private static final String ARTIST_KEY = "name";
     private static final String TITLE_KEY = "title";
     private static final String YEAR_KEY = "year";
+    private static final String IMAGE_URL_KEY = "imageUrl";
     private String artist;
     private String title;
     private int year;
+    private String imageUrl;
 
     public Song(){
 
     }
 
     public Song(JSONObject jsonObj) throws JSONException {
-//        try {
-            this.artist = jsonObj.getString(ARTIST_KEY);
-            this.title = jsonObj.getString(TITLE_KEY);
-            this.year = jsonObj.getInt(YEAR_KEY);
-//        } catch ( JSONException e){
-//            Log.e(TAG, e.getMessage());
-//        }
+        this.artist = jsonObj.getString(ARTIST_KEY);
+        this.title = jsonObj.getString(TITLE_KEY);
+        this.imageUrl = jsonObj.getString(IMAGE_URL_KEY);
     }
 
     public String getArtist() {
@@ -37,7 +32,7 @@ public class Song {
         return title;
     }
 
-    public int getYear() {
-        return year;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
