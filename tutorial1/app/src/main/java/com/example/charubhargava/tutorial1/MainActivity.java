@@ -1,5 +1,6 @@
 package com.example.charubhargava.tutorial1;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -31,7 +33,6 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
     private static final String STATION_DB_KEY = "stationDB";
     private static final String IMAGE_TAB_TITLE = "Now Playing";
     private static final String RECOMMENDED_TAB_TITLE = "Explore";
-    private static final String HISTORY_TAB_TITLE = "Stats";
+    private static final String HISTORY_TAB_TITLE = "Listening Stats";
     private static final String RECORDINGS_TAB_TITLE = "Record";
     private static final int CACHE_SIZE = 16384;
 
@@ -146,7 +147,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
         //Init stream status and player singletons, update player with the current stream status
         mStreamStatus.updateStreamStatus();
-        StreamStatus.setListener(new StreamStatus.songChangeListener() {
+        StreamStatus.setSongListener(new StreamStatus.songChangeListener() {
             @Override
             public void OnSongChange() {
                 stnDisplay.setText(mStreamStatus.getCurrentStation().getName());
@@ -301,11 +302,13 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         //Add a marker for each station
         googleMap.clear();
         HashMap<String, Station> stations = myStnDB.getStations();
+        BitmapDescriptor markerIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_wifi_white_24dp);
         for (String id : stations.keySet()) {
             Station s = stations.get(id);
             LatLng stn = new LatLng(s.getCountryLat(), s.getCountryLong());
-            googleMap.addMarker(new MarkerOptions().position(stn).title(id).snippet(s.getGenre()
-                    + " " + s.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_wifi_white_24dp)));
+            String markerTitle = s.getName() + " (" + s.getGenre() + ")";
+            Marker Mcurr = googleMap.addMarker(new MarkerOptions().position(stn).title(markerTitle).icon(markerIcon));
+            Mcurr.setTag(id);
         }
 
     }
@@ -317,10 +320,10 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         if(debug)
             Toast.makeText(this, "Radio Station selected by" + userID, Toast.LENGTH_SHORT).show();
 
-        Log.d(TAG, "Selected Station ID = " + marker.getTitle());
+        Log.e(TAG, "Selected Station ID = " + marker.getTag().toString());
         Log.d(TAG, "UserID = " + userID);
 
-        StreamStatus.getInstance(MainActivity.this).updateStreamStatus(marker.getTitle(), true);
+        StreamStatus.getInstance(MainActivity.this).updateStreamStatus(marker.getTag().toString(), true);
 
     }
 

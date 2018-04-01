@@ -1,10 +1,7 @@
 package com.example.charubhargava.tutorial1;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -39,8 +36,8 @@ public class StreamStatus {
     private String imageUrl = "";
     private static StreamStatus mInstance;
     private static Context mCtx;
-    private static songChangeListener listener;
-
+    private static songChangeListener songListener;
+    private static imageChangeListener imageListener;
 
     private StreamStatus(Context context) {
         this.mCtx = context;
@@ -48,7 +45,8 @@ public class StreamStatus {
         this.currentStreamUrl = "";
         this.currentStation = new Station();
         this.currentSong = new Song();
-        this.listener = null;
+        this.songListener = null;
+        this.imageListener = null;
     }
 
     public static synchronized  StreamStatus getInstance(Context context) {
@@ -67,10 +65,6 @@ public class StreamStatus {
         return currentStation;
     }
 
-    public String getCurrentStreamUrl() {
-        return currentStreamUrl;
-    }
-
     public Song getCurrentSong() {
         return currentSong;
     }
@@ -79,16 +73,24 @@ public class StreamStatus {
         return imageUrl;
     }
 
-    public static void setListener(songChangeListener listener) {
-        StreamStatus.listener = listener;
-    }
 
     public interface songChangeListener{
         public void OnSongChange();
     }
 
+    public interface imageChangeListener{
+        public void OnImageChange();
+    }
+
+    public static void setSongListener(songChangeListener songListener) {
+        StreamStatus.songListener = songListener;
+    }
+
+    public static void setImageListener(imageChangeListener imageListener) {
+        StreamStatus.imageListener = imageListener;
+    }
+
     private void updateStreamStatusFields(JSONObject jsonObj)  {
-//        Log.d(TAG, "jsonobj StreamStatus: " + jsonObj.toString());
 
         boolean playing;
         Station currStn;
@@ -109,10 +111,8 @@ public class StreamStatus {
         this.currentStreamUrl = currStreamUrl;
         this.currentSong = currSong;
         this.imageUrl = currSong.getImageUrl();
-//        Log.d(TAG, "Updating player ");
-        if(StreamStatus.listener != null) listener.OnSongChange();
-//        Player.getInstance(mCtx).updateSongInfo(currentStation.getName(),currentSong.getTitle(),currentSong.getArtist(),isPlaying);
-//        Log.d(TAG, "Updated player ");
+        if(StreamStatus.songListener != null) songListener.OnSongChange();
+        if(StreamStatus.imageListener != null) imageListener.OnImageChange();
     }
 
     public void updateStreamStatus(final String streamId, final boolean isPlaying){

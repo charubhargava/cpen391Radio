@@ -13,14 +13,14 @@
     android:padding="10dp"
     android:background="@color/transparent">
 
-    <Button
-        android:id="@+id/back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/translucent"
-        android:textColor="@color/lightGrey"
-        android:padding="10dp"
-        android:text="@string/back" />
+    <!--<Button-->
+        <!--android:id="@+id/back"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/translucent"-->
+        <!--android:textColor="@color/lightGrey"-->
+        <!--android:padding="10dp"-->
+        <!--android:text="@string/back" />-->
 
 
     <LinearLayout

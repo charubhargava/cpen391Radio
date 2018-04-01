@@ -61,14 +61,14 @@ public class RecordingsCreateFragment extends Fragment  {
     public void onViewCreated(View v, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
 
-        Button back = v.findViewById(R.id.back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RecordingsFragment parent = (RecordingsFragment) RecordingsCreateFragment.this.getParentFragment();
-                parent.setViewPager(0);
-            }
-        });
+//        Button back = v.findViewById(R.id.back);
+//        back.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                RecordingsFragment parent = (RecordingsFragment) RecordingsCreateFragment.this.getParentFragment();
+//                parent.setViewPager(0);
+//            }
+//        });
 
         Spinner stationsSpinner = v.findViewById(R.id.spinnerStations);
 
