@@ -96,12 +96,13 @@ public class RecordingsDB {
                             recording = response.getJSONObject(RECORDING_KEY);
                             Recording currRecording = new Recording(recording);
                             recordings.add(currRecording);
+                            if(RecordingsDB.listener != null) listener.OnRecordingsReady();
                             Toast.makeText(mCtx, "Recording scheduled!", Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             if(MainActivity.debug)
                                 Toast.makeText(mCtx, "Error creating recording: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             else
-                                Toast.makeText(mCtx, "Error creating recording: ", Toast.LENGTH_LONG).show();
+                                Toast.makeText(mCtx, "Error creating recording", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -109,7 +110,7 @@ public class RecordingsDB {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
-                        Toast.makeText(mCtx, TAG + " Error from server: " + error.getMessage() , Toast.LENGTH_LONG).show();
+                        Toast.makeText(mCtx, TAG + " Error from server", Toast.LENGTH_LONG).show();
                         Log.e(TAG, error.toString());
                         Log.e(TAG, error.getStackTrace().toString());
                         if(error.networkResponse != null) {

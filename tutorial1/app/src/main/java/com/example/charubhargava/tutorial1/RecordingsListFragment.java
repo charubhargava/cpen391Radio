@@ -78,23 +78,6 @@ public class RecordingsListFragment extends Fragment {
             }
         });
 
-//        FloatingActionButton fab_delete = view.findViewById(R.id.fab_delete);
-//        fab_delete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ImageButton deleteButton = view.findViewById(R.id.deleteRecording);
-//                deleteButton.setVisibility(View.VISIBLE);
-//                deleteButton.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        //delete recordings
-//
-//                        Toast.makeText(getContext(), "delete recordings", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//        });
-
     }
 
     public void updateRecordings() {

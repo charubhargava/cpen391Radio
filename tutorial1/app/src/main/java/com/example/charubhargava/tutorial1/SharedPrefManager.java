@@ -73,7 +73,6 @@ public class SharedPrefManager {
     public void userLogin(User user) {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        Toast.makeText(mCtx,"User Id in shared pref from user object " + user.getUserId(), Toast.LENGTH_LONG).show();
         editor.putString(ID_KEY, user.getUserId());
         editor.putString(DEVICE_TOKEN_KEY, user.getDeviceToken());
         editor.putBoolean(IS_PLAYING_KEY, user.isPlaying());

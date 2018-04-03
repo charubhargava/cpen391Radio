@@ -41,7 +41,8 @@
             android:id="@+id/spinnerStations"
             android:layout_width="0dp"
             android:layout_weight="0.70"
-            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            android:spinnerMode="dropdown"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
             android:layout_height="wrap_content" />
 
     </LinearLayout>
@@ -56,14 +57,14 @@
             android:id="@+id/pick_title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.50"
+            android:layout_weight="0.30"
             android:textColor="@color/white"
             android:text="@string/pick_title"/>
 
         <EditText
             android:id="@+id/rec_title"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.70"
             android:layout_height="wrap_content"
             android:textColor="@color/lightGrey"
             android:backgroundTint="@color/lightGrey"
@@ -81,14 +82,14 @@
             android:id="@+id/pick_start_date"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.50"
+            android:layout_weight="0.30"
             android:textColor="@color/white"
             android:text="@string/start_date"/>
 
         <EditText
             android:id="@+id/start_date"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.70"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="false"
@@ -108,14 +109,14 @@
             android:id="@+id/pick_end_date"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.50"
+            android:layout_weight="0.30"
             android:textColor="@color/white"
             android:text="@string/end_date"/>
 
         <EditText
             android:id="@+id/end_date"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.70"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="false"
@@ -135,14 +136,14 @@
             android:id="@+id/pick_start_time"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.50"
+            android:layout_weight="0.30"
             android:textColor="@color/white"
             android:text="@string/start_time"/>
 
         <EditText
             android:id="@+id/start_time"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.70"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="false"
@@ -162,14 +163,14 @@
             android:id="@+id/pick_end_time"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.50"
+            android:layout_weight="0.30"
             android:textColor="@color/white"
             android:text="@string/end_time"/>
 
         <EditText
             android:id="@+id/end_time"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.70"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="false"

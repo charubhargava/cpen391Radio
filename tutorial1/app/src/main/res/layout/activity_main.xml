@@ -55,9 +55,18 @@
             android:background="@color/colorActionBar"
             android:orientation="horizontal">
 
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="0.10"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/up_arrow"/>
+
+
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="0.80"
+                android:layout_weight="0.70"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
@@ -73,6 +82,11 @@
                     android:textSize="14sp"
                     android:textColor="@color/white"
                     android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:focusedByDefault="true"
                     android:text="@string/stn_display"/>
 
                 <TextView
@@ -83,6 +97,10 @@
                     android:textAllCaps="true"
                     android:textSize="12sp"
                     android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:fadingEdge="horizontal"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
                     android:textColor="@color/grey"
                     android:text="@string/song_display"/>
             </LinearLayout>

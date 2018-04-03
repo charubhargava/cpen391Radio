@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -49,7 +50,6 @@ public class RecommendFragment extends Fragment {
         SharedPrefManager sharedPref = SharedPrefManager.getInstance(getContext());
         String url = sharedPref.getRecommendURL();
         final String userID = sharedPref.getUserId();
-
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -62,7 +62,7 @@ public class RecommendFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
-                        Toast.makeText(getContext(), TAG + " Error from server: " + error.toString() , Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), TAG + " Error from server", Toast.LENGTH_LONG).show();
                         Log.e(TAG, "Server error: " + error.toString());
                     }
                 }) {
@@ -80,7 +80,8 @@ public class RecommendFragment extends Fragment {
     private void populateList(JSONObject response){
         View v = getView();
         if(v == null) return;
-
+        ProgressBar progressBar = v.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
         final ArrayList<StationDisplayItem> stations = new ArrayList<>();
         try {
             JSONArray recommendations = response.getJSONArray(RECOMMENDATIONS_KEY);
@@ -103,6 +104,7 @@ public class RecommendFragment extends Fragment {
 
         final ListView recommendListView = v.findViewById(R.id.recommended_list);
         ArrayAdapter<StationDisplayItem> dataAdapter = new ArrayAdapter<>(getContext(), R.layout.recommended_list_item,stations);
+//        StationArrayAdaptor dataAdapter = new StationArrayAdaptor(getContext(), R.layout.recommended_list_item,stations);
         recommendListView.setAdapter(dataAdapter);
         recommendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -110,7 +112,7 @@ public class RecommendFragment extends Fragment {
                 //play this station
                 StationDisplayItem selectedStn = stations.get(i);
                 if(selectedStn != null){
-                    Toast.makeText(getContext(), "Selected stn name: " + selectedStn.getTitle(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Selected stn name: " + selectedStn.getTitle(), Toast.LENGTH_SHORT).show();
                     StreamStatus.getInstance(getContext()).updateStreamStatus(selectedStn.getId(), true);
 
                 }

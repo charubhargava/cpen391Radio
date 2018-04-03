@@ -151,8 +151,12 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
             @Override
             public void OnSongChange() {
                 stnDisplay.setText(mStreamStatus.getCurrentStation().getName());
-                String songDisplayText = mStreamStatus.getCurrentSong().getTitle() + " - " + mStreamStatus.getCurrentSong().getArtist();
+                stnDisplay.setSelected(true);
+                String currArtist = mStreamStatus.getCurrentSong().getArtist();
+                String songDisplayText = (currArtist.equals("")) ? mStreamStatus.getCurrentSong().getTitle() :
+                        mStreamStatus.getCurrentSong().getTitle() + " - " + mStreamStatus.getCurrentSong().getArtist();
                 songDisplay.setText(songDisplayText);
+                songDisplay.setSelected(true);
                 //TODO make text scroll if too big
                 boolean isPlaying = mStreamStatus.getPlaying();
                 if(isPlaying) playPauseBtn.setImageResource(R.drawable.ic_pause_white_24dp);
@@ -278,9 +282,8 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
                             });
 
                         } catch (JSONException e){
-                            Toast.makeText(MainActivity.this, "JSONException getting stations  " +
-                                    e.getMessage(), Toast.LENGTH_LONG).show();
-
+                            Toast.makeText(MainActivity.this, "Error getting stations", Toast.LENGTH_SHORT).show();
+                            Log.e(TAG, "Error getting stations " + e.getMessage());
                         }
 
                     }
@@ -288,8 +291,8 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.this, "Error getting stations: " +
-                                error.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "Error getting stations", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Error getting stations " + error.getMessage());
 
                     }
                 });

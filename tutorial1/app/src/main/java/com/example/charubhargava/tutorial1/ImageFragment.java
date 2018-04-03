@@ -18,8 +18,10 @@ import com.bumptech.glide.Glide;
 
 public class ImageFragment extends Fragment {
     private static final String TAG = "ImageFragment";
-    private String currImageUrl = "http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg";
-    private String defaultUrl = "http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg";
+    private String currImageUrl = "";
+//    private String defaultUrl = "http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg";
+    private android.net.Uri defaultUri = android.net.Uri.parse("R.drawable.music_img");
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,17 +40,18 @@ public class ImageFragment extends Fragment {
                 String imageUrl = StreamStatus.getInstance(getContext()).getImageUrl();
                 if(!(imageUrl == null || imageUrl.equals(""))){
                     //set image glide
-                    Toast.makeText(getContext(), "Image url exists", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Image url exists", Toast.LENGTH_SHORT).show();
                     Glide.with(getContext())
                             .load(imageUrl)
                             .into(img);
                     currImageUrl = imageUrl;
                 }
                 else{
-                    Glide.with(getContext())
-                            .load(defaultUrl)
-                            .into(img);
-                    currImageUrl = defaultUrl;
+//                    Glide.with(getContext())
+//                            .load(defaultUrl)
+//                            .into(img);
+//                    currImageUrl = defaultUrl;
+                     img.setImageResource(R.drawable.music_default);
                 }
             }
         });
@@ -60,8 +63,14 @@ public class ImageFragment extends Fragment {
         View v = getView();
         if(v == null) return;
         ImageView img = (ImageView)getView().findViewById(R.id.song_image);
+        if(!(currImageUrl == null || currImageUrl.equals(""))){
         Glide.with(getContext())
                 .load(currImageUrl)
                 .into(img);
+        }
+        else{
+            img.setImageResource(R.drawable.music_default);
+        }
+
     }
 }

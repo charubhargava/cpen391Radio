@@ -56,7 +56,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
                 (Request.Method.POST, NEW_DEVICE_URL, registerDeviceJSON, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(getApplicationContext(),"Response: " + response.toString(), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getApplicationContext(),"Response: " + response.toString(), Toast.LENGTH_LONG).show();
                         User myUser = new User(response, getApplicationContext());
                         SharedPrefManager.getInstance(getApplicationContext()).userLogin(myUser);
                     }
@@ -65,6 +65,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
+                        Log.e(TAG, "Error in registration firebase");
 
                     }
                 });

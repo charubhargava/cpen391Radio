@@ -76,10 +76,10 @@ public class RecordingsCreateFragment extends Fragment  {
         final MainActivity parentAct = (MainActivity) parentFrag.getActivity();
         mStations = parentAct.getStations();
 
-        ArrayAdapter<Station> dataAdapter = new ArrayAdapter<Station>(parentAct, android.R.layout.simple_spinner_item, mStations );
+        ArrayAdapter<Station> dataAdapter = new ArrayAdapter<Station>(getContext(), android.R.layout.simple_spinner_item, mStations );
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         stationsSpinner.setAdapter(dataAdapter);
-
+        stationsSpinner.setDropDownVerticalOffset(275);
         stationsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -139,12 +139,11 @@ public class RecordingsCreateFragment extends Fragment  {
         });
 
         final EditText titleText = v.findViewById(R.id.rec_title);
-
         Button btnDone = v.findViewById(R.id.add_recording);
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO add some sort of checking for empty fields.. in xml maybe?
+                //TODO add some sort of checking for empty fields..
                 long unixStartTime = getUnixTime(startYear, startMonth, startDay, startHour, startMinute);
                 long unixEndTime = getUnixTime(endYear, endMonth, endDay, endHour, endMinute);
                 String title = titleText.getText().toString();

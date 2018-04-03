@@ -195,7 +195,6 @@ public class StreamStatus {
                             Toast.makeText(mCtx, TAG + "Response: " + response.toString(), Toast.LENGTH_LONG).show();
                             updateStreamStatusFields(response);
                             sharedPref.updateCurrStreamStatus(getInstance(mCtx));
-//                            Player.getInstance(mCtx).updateSongInfo(currentStation.getName(),currentSong.getTitle() , currentSong.getArtist(),isPlaying);
                     }
                 }, new Response.ErrorListener() {
 

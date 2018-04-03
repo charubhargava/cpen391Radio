@@ -9,6 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cropToPadding="true"
-        android:src="@drawable/fab_add"/>
+        android:src="@drawable/music_default"/>
 
 </RelativeLayout>
