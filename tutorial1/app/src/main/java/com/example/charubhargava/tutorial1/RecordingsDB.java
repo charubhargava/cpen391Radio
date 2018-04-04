@@ -236,6 +236,13 @@ public class RecordingsDB {
         if(RecordingsDB.listener != null) listener.OnRecordingsReady();
     }
 
+    public String  getRecordingName(String id){
+        for(Recording rec : RecordingsDB.recordings){
+            if(rec.getId().equals(id)) return rec.getTitle();
+        }
+        return " ";
+
+    }
     private void addRecordings(JSONObject jsonObject){
         try {
             JSONArray recordings = jsonObject.getJSONArray(RECORDINGS_KEY);

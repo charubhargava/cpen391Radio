@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class RecommendFragment extends Fragment {
     private static final String RECOMMENDATIONS_KEY = "recommendations";
     private static final String STATION_ID_KEY = "id";
     private static final String STATION_NAME_KEY = "name";
+    private static final String GENRE_KEY = "genre";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,6 +44,12 @@ public class RecommendFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fetchRecommendedStations();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
         fetchRecommendedStations();
     }
 
@@ -63,7 +71,22 @@ public class RecommendFragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         // TODO Auto-generated method stub
                         Toast.makeText(getContext(), TAG + " Error from server", Toast.LENGTH_LONG).show();
-                        Log.e(TAG, "Server error: " + error.toString());
+
+
+                        String body;
+                        //get status code here
+                        if(error.networkResponse != null){
+                            String statusCode = String.valueOf(error.networkResponse.statusCode);
+                            //get response body and parse with appropriate encoding
+                            if (error.networkResponse.data != null) {
+                                try {
+                                    body = new String(error.networkResponse.data, "UTF-8");
+                                    Log.e(TAG, "Body " + body);
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        } else Log.e(TAG, "Error from server " + error.getMessage());
                     }
                 }) {
             @Override
@@ -94,7 +117,7 @@ public class RecommendFragment extends Fragment {
                     Log.e(TAG, e.getMessage());
                     continue;
                 }
-                stn = new StationDisplayItem(curr.getString(STATION_NAME_KEY),curr.getString(STATION_ID_KEY));
+                stn = new StationDisplayItem(curr.getString(STATION_NAME_KEY),curr.getString(STATION_ID_KEY), curr.getString(GENRE_KEY));
                 stations.add(stn);
             }
         } catch (JSONException e) {
@@ -103,8 +126,8 @@ public class RecommendFragment extends Fragment {
 
 
         final ListView recommendListView = v.findViewById(R.id.recommended_list);
-        ArrayAdapter<StationDisplayItem> dataAdapter = new ArrayAdapter<>(getContext(), R.layout.recommended_list_item,stations);
-//        StationArrayAdaptor dataAdapter = new StationArrayAdaptor(getContext(), R.layout.recommended_list_item,stations);
+//        ArrayAdapter<StationDisplayItem> dataAdapter = new ArrayAdapter<>(getContext(), R.layout.recommended_list_item,stations);
+        StationArrayAdaptor dataAdapter = new StationArrayAdaptor(getContext(), R.layout.recommended_list_item,stations);
         recommendListView.setAdapter(dataAdapter);
         recommendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

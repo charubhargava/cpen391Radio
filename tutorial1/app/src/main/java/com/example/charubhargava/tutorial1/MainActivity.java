@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -55,7 +56,8 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
     private static final String HISTORY_TAB_TITLE = "Listening Stats";
     private static final String RECORDINGS_TAB_TITLE = "Record";
     private static final int CACHE_SIZE = 16384;
-
+    private static final int MIN_VOL = 0;
+    private static final int MAX_VOL = 100;
 
     private SectionsPageAdapter mSectionsPageAdapter;
     private ViewPager mViewPager;
@@ -93,10 +95,24 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
     }
 
-    //TODO Test this
     @Override
-    protected void onResume() {
-        super.onResume();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        super.onKeyDown(keyCode, event);
+        SharedPrefManager sharedPref = SharedPrefManager.getInstance(MainActivity.this);
+        StreamStatus mStreamStatus = StreamStatus.getInstance(MainActivity.this);
+        if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
+           if(mStreamStatus.getCurrentVolume() > MIN_VOL) mStreamStatus.decCurrentVolume(true);
+            mStreamStatus.updateStreamStatus(mStreamStatus.getCurrentVolume());
+        }
+        else if(keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+            if(mStreamStatus.getCurrentVolume() < MAX_VOL) mStreamStatus.decCurrentVolume(false);
+            mStreamStatus.updateStreamStatus(mStreamStatus.getCurrentVolume());
+        }
+
+        Toast.makeText(this, "Volume: " + mStreamStatus.getCurrentVolume(), Toast.LENGTH_SHORT).show();
+        return true;
+
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -133,7 +149,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         playPauseBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 boolean isPlaying = !mStreamStatus.getPlaying();
-                mStreamStatus.updateStreamStatus(sharedPref.getCurrStreamID(), isPlaying );
+                mStreamStatus.updateStreamStatus(mStreamStatus.getCurrentPlaying(), isPlaying);
                 if(isPlaying){
                     //image pause
                     playPauseBtn.setImageResource(R.drawable.ic_pause_white_24dp);
@@ -150,7 +166,8 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         StreamStatus.setSongListener(new StreamStatus.songChangeListener() {
             @Override
             public void OnSongChange() {
-                stnDisplay.setText(mStreamStatus.getCurrentStation().getName());
+//                stnDisplay.setText(mStreamStatus.getCurrentStation().getName());
+                stnDisplay.setText(mStreamStatus.getCurrentPlayingTitle());
                 stnDisplay.setSelected(true);
                 String currArtist = mStreamStatus.getCurrentSong().getArtist();
                 String songDisplayText = (currArtist.equals("")) ? mStreamStatus.getCurrentSong().getTitle() :

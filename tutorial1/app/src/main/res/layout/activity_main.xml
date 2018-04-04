@@ -59,7 +59,7 @@
             <ImageView
                 android:layout_width="0dp"
                 android:layout_weight="0.10"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/up_arrow"/>
 

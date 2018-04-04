@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#11c5d9</color>
+    <color name="colorPrimary">#26c6da</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#0bddf4</color>
+    <color name="colorAccent">#32e0f4</color>
+    <color name="colorTime">#01818f</color>
 
     <color name="colorActionBar">#000000</color>
     <color name="colorActionBarText">#ffffff</color>

@@ -35,6 +35,7 @@ public class StatsFragment extends Fragment {
     private static final String STATION_NAME_KEY = "name";
     private static final String DURATION_KEY = "duration";
     private static final String STATION_KEY = "station";
+    private static final String GENRE_KEY = "genre";
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,6 +46,12 @@ public class StatsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fetchStats();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
         fetchStats();
     }
 
@@ -103,7 +110,7 @@ public class StatsFragment extends Fragment {
                 long duration  = 0;
                 duration = curr.getLong(DURATION_KEY);
                 stnInfo = curr.getJSONObject(STATION_KEY);
-                stn = new StationDisplayItem(stnInfo.getString(STATION_NAME_KEY),stnInfo.getString(STATION_ID_KEY),duration);
+                stn = new StationDisplayItem(stnInfo.getString(STATION_NAME_KEY),stnInfo.getString(STATION_ID_KEY),duration,stnInfo.getString(GENRE_KEY));
                 stations.add(stn);
             }
         } catch (JSONException e) {
@@ -112,8 +119,8 @@ public class StatsFragment extends Fragment {
 
 
         final ListView recommendListView = v.findViewById(R.id.recommended_list);
-        ArrayAdapter<StationDisplayItem> dataAdapter = new ArrayAdapter<>(getContext(), R.layout.recommended_list_item,stations);
-//        StationArrayAdaptor dataAdapter = new StationArrayAdaptor(getContext(), R.layout.recommended_list_item,stations);
+//        ArrayAdapter<StationDisplayItem> dataAdapter = new ArrayAdapter<>(getContext(), R.layout.recommended_list_item,stations);
+        StationArrayAdaptor dataAdapter = new StationArrayAdaptor(getContext(), R.layout.recommended_list_item,stations);
 
         recommendListView.setAdapter(dataAdapter);
         recommendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

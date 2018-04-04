@@ -6,26 +6,27 @@ public class StationDisplayItem {
     private String StationName;
     private String StationId;
     private String Duration;
-    private String imageUrl;
+    private String genre;
 
     public StationDisplayItem(){
         this.StationName = "";
         this.StationId = "";
         this.Duration = "";
-        this.imageUrl = "";
+        this.genre = "";
     }
 
-    public StationDisplayItem(String name, String id){
+    public StationDisplayItem(String name, String id, String genre){
         this.StationName = name;
         this.StationId = id;
         this.Duration = "";
-        this.imageUrl = "";
+        this.genre = genre;
     }
 
-    public StationDisplayItem(String name, String id, long time){
+    public StationDisplayItem(String name, String id, long time, String genre){
         this.StationName = name;
         this.StationId = id;
         this.Duration = inHours(time);
+        this.genre = genre;
     }
 
     private String inHours (long sec){
@@ -34,8 +35,8 @@ public class StationDisplayItem {
         int m =(int) (sec)/60;
         int s = (int) (sec - m*60);
 //        return String.format(Locale.getDefault(),"(%02d : %02d h)",h,m);
-        if(m == 0) return String.format(Locale.getDefault(),"(%02d sec)",s);
-        else return String.format(Locale.getDefault(),"(%02d min %02d sec)",m, s);
+        if(m == 0) return String.format(Locale.getDefault(),"%02d sec",s);
+        else return String.format(Locale.getDefault(),"%02d min %02d sec",m, s);
 
     }
     public String getTitle(){
@@ -46,15 +47,18 @@ public class StationDisplayItem {
         return StationId;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getDuration(){
+        if(this.Duration == null || this.Duration.equals("")) return " ";
+        else return this.Duration;
     }
 
     @Override
     public String toString() {
-        if(this.Duration == null || this.Duration.equals(""))
-            return StationName;
-        else
-            return StationName + " " + Duration;
+//        if(this.Duration == null || this.Duration.equals(""))
+//            return StationName;
+//        else
+//            return StationName + " " + Duration ;
+    return StationName + " (" + genre + ") ";
     }
+
 }

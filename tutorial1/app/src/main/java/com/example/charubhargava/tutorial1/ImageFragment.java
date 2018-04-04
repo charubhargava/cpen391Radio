@@ -52,6 +52,7 @@ public class ImageFragment extends Fragment {
 //                            .into(img);
 //                    currImageUrl = defaultUrl;
                      img.setImageResource(R.drawable.music_default);
+                     currImageUrl = "";
                 }
             }
         });
