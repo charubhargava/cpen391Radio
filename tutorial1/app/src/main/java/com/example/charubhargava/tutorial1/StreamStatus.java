@@ -41,7 +41,6 @@ public class StreamStatus {
     private Song currentSong = new Song();
     private String imageUrl = "";
     private String currentPlayingTitle;
-//    private int currentVolume;
     private boolean isRecording;
     private static StreamStatus mInstance;
     private static Context mCtx;
@@ -56,7 +55,6 @@ public class StreamStatus {
         this.currentSong = new Song();
         this.songListener = null;
         this.imageListener = null;
-//        this.currentVolume = DEFAULT_VOLUME;
         this.currentPlaying = "";
         this.isRecording = false;
         this.currentPlayingTitle = "";
@@ -110,14 +108,10 @@ public class StreamStatus {
 
     private void updateStreamStatusFields(JSONObject jsonObj)  {
 
-        String prevSongTitle = this.currentSong.getTitle();
-        String prevPlaying = this.currentPlaying;
-
         boolean playing;
         Station currStn;
         String currStreamUrl;
         Song currSong;
-//        int currentVol;
         String currentPlay;
 
         try {
@@ -125,11 +119,9 @@ public class StreamStatus {
             currStn = new Station(jsonObj.getJSONObject(CURRENT_STATION_KEY));
             currStreamUrl = jsonObj.getString(CURRENT_STREAM_URL_KEY);
             currSong = new Song(jsonObj.getJSONObject(CURRENT_SONG_KEY));
-//            currentVol = jsonObj.getInt(CURRENT_VOLUME_KEY);
             currentPlay = jsonObj.getString(CURRENT_STREAM_ID_KEY);
         } catch (JSONException e){
             Log.e(TAG, e.getMessage());
-            Toast.makeText(mCtx, "Error updating current song", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -139,13 +131,10 @@ public class StreamStatus {
         this.currentStreamUrl = currStreamUrl;
         this.currentSong = currSong;
         this.imageUrl = currSong.getImageUrl();
-//        this.currentVolume = currentVol;
         this.currentPlaying = currentPlay;
         setCurrentPlayingTitle();
 
         if(StreamStatus.songListener != null) {
-//            if(!(this.currentPlaying.equals(prevPlaying) && this.currentSong.getTitle().equals(prevSongTitle)))
-//              if(!volumeOnly)
             songListener.OnSongChange();
         }
         if(StreamStatus.imageListener != null) imageListener.OnImageChange();

@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -101,6 +102,8 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
+
+
     }
 
     @Override
@@ -120,6 +123,7 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
 
         return super.onKeyDown(keyCode, event);
     }
+
 
     private void setupViewPager(ViewPager viewPager) {
         SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager());

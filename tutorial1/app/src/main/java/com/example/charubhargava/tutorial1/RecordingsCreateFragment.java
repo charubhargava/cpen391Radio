@@ -69,7 +69,7 @@ public class RecordingsCreateFragment extends Fragment  {
 //                parent.setViewPager(0);
 //            }
 //        });
-
+        
         Spinner stationsSpinner = v.findViewById(R.id.spinnerStations);
 
         final RecordingsFragment parentFrag = (RecordingsFragment) getParentFragment();
@@ -155,6 +155,7 @@ public class RecordingsCreateFragment extends Fragment  {
             }
         });
     }
+
 
     public void setTime(int hour, int minute, String timeDisplay, boolean isStart){
         if(isStart){

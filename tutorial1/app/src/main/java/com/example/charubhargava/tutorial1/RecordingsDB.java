@@ -172,7 +172,7 @@ public class RecordingsDB {
         VolleySingleton.getInstance(mCtx).addToRequestQueue(jsObjRequest);
     }
 
-    public boolean deleteRecording(final String id){
+    public boolean deleteRecording(final String id) {
         final boolean[] success = {false};
         SharedPrefManager sharedPref = SharedPrefManager.getInstance(mCtx);
         String url = sharedPref.getRecordingsURL();
@@ -230,9 +230,12 @@ public class RecordingsDB {
 
     //Remove recording from set
     private void removeRecording(String id){
+        Recording toDelete = null;
         for(Recording rec : RecordingsDB.recordings){
-            if(rec.getId().equals(id)) recordings.remove(rec);
+            if(rec.getId().equals(id)) toDelete = rec;
+//            recordings.remove(rec);
         }
+        if(toDelete != null) recordings.remove(toDelete);
         if(RecordingsDB.listener != null) listener.OnRecordingsReady();
     }
 

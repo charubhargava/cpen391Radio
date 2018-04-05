@@ -54,6 +54,7 @@ public class RecordingsFragment extends Fragment {
             RecordingsListFragment f = (RecordingsListFragment) adapter.getItem(mViewPager.getCurrentItem());
             f.updateRecordings();
         }
+
     }
 
 }
