@@ -1,6 +1,8 @@
 package com.example.charubhargava.tutorial1;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -57,13 +59,16 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
     private static final String RECORDINGS_TAB_TITLE = "Record";
     private static final int CACHE_SIZE = 16384;
     private static final int MIN_VOL = 0;
-    private static final int MAX_VOL = 100;
-
+    private static final int MAX_VOL = 15;
+    private static final int VOL_MULTIPLIER = 6;
     private SectionsPageAdapter mSectionsPageAdapter;
     private ViewPager mViewPager;
 
+    private AudioManager mAudioManager;
+
     public static StationDB myStnDB = new StationDB();
     public static boolean debug = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,26 +98,27 @@ public class  MainActivity extends AppCompatActivity  implements OnMapReadyCallb
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        super.onKeyDown(keyCode, event);
+        if(mAudioManager == null) return false;
+
         SharedPrefManager sharedPref = SharedPrefManager.getInstance(MainActivity.this);
         StreamStatus mStreamStatus = StreamStatus.getInstance(MainActivity.this);
         if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
-           if(mStreamStatus.getCurrentVolume() > MIN_VOL) mStreamStatus.decCurrentVolume(true);
-            mStreamStatus.updateStreamStatus(mStreamStatus.getCurrentVolume());
+            int vol = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            if(vol > MIN_VOL) mStreamStatus.updateStreamStatus((int) vol*VOL_MULTIPLIER);
         }
         else if(keyCode == KeyEvent.KEYCODE_VOLUME_UP){
-            if(mStreamStatus.getCurrentVolume() < MAX_VOL) mStreamStatus.decCurrentVolume(false);
-            mStreamStatus.updateStreamStatus(mStreamStatus.getCurrentVolume());
+            int vol = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            if(vol < MAX_VOL) mStreamStatus.updateStreamStatus((int) vol*VOL_MULTIPLIER);
         }
 
-        Toast.makeText(this, "Volume: " + mStreamStatus.getCurrentVolume(), Toast.LENGTH_SHORT).show();
-        return true;
-
-
+        return super.onKeyDown(keyCode, event);
     }
 
     private void setupViewPager(ViewPager viewPager) {

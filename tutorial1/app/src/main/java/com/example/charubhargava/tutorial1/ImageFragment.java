@@ -19,8 +19,6 @@ import com.bumptech.glide.Glide;
 public class ImageFragment extends Fragment {
     private static final String TAG = "ImageFragment";
     private String currImageUrl = "";
-//    private String defaultUrl = "http://inthecheesefactory.com/uploads/source/glidepicasso/cover.jpg";
-    private android.net.Uri defaultUri = android.net.Uri.parse("R.drawable.music_img");
 
     @Nullable
     @Override
@@ -39,18 +37,12 @@ public class ImageFragment extends Fragment {
             public void OnImageChange() {
                 String imageUrl = StreamStatus.getInstance(getContext()).getImageUrl();
                 if(!(imageUrl == null || imageUrl.equals(""))){
-                    //set image glide
-//                    Toast.makeText(getContext(), "Image url exists", Toast.LENGTH_SHORT).show();
                     Glide.with(getContext())
                             .load(imageUrl)
                             .into(img);
                     currImageUrl = imageUrl;
                 }
                 else{
-//                    Glide.with(getContext())
-//                            .load(defaultUrl)
-//                            .into(img);
-//                    currImageUrl = defaultUrl;
                      img.setImageResource(R.drawable.music_default);
                      currImageUrl = "";
                 }
